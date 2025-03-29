@@ -1,36 +1,40 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/go-session/redis/v3"
+	"github.com/go-session/session/v3"
 	"github.com/joho/godotenv"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"tantieme/domains"
+	"tantieme/helpers"
 )
 
-func getData() Person {
-	person := Person{
-		Name:     "World",
-		Tantieme: 1,
-	}
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/404.html")
+	w.WriteHeader(http.StatusNotFound)
+	err := t.Execute(w, nil)
 
-	return person
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	data := getData()
+	if r.URL.Path != "/" {
+		notFoundHandler(w, r)
+		return
+	}
+
 	t, _ := template.ParseFiles("templates/index.html")
-	t.Execute(w, data)
-}
+	err := t.Execute(w, nil)
 
-func personHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func billsHandler(w http.ResponseWriter, r *http.Request) {
-
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func main() {
@@ -39,12 +43,24 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db, _ := sql.Open("sqlite3", "./tantieme.db")
-	defer db.Close()
+	session.InitManager(
+		session.SetStore(redis.NewRedisStore(&redis.Options{
+			Addr: "127.0.0.1:6379",
+			DB:   0,
+		})),
+	)
 
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/persons", personHandler)
-	http.HandleFunc("/bills", billsHandler)
+	connManager := helpers.GetConnectionManager()
+
+	connManager.AddConnection("sqlite3", "auth")
+	defer connManager.CloseConnection("auth")
+
+	http.HandleFunc("GET /persons", domains.PersonHandler)
+	http.HandleFunc("GET /bills", domains.BillsHandler)
+	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
+	http.HandleFunc("POST /login", domains.LoginHandler)
+	http.HandleFunc("GET /logout", domains.LogoutHandler)
+	http.HandleFunc("GET /", indexHandler)
 
 	fmt.Fprint(os.Stdout, "Listening on port ", os.Getenv("PORT"), "...")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil))

@@ -10,3 +10,5 @@ go.work.sum
 .env
 .idea
 *.db
+tantieme
+vendor
