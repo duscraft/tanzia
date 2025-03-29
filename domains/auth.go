@@ -72,7 +72,5 @@ func GetAuthenticatedUsername(w http.ResponseWriter, r *http.Request) (string, b
 	}
 	username, ok := store.Get(cookie.Value)
 
-	fmt.Println(cookie, username, ok)
-
 	return fmt.Sprintf("%s", username), ok
 }

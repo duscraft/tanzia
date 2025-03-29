@@ -52,7 +52,7 @@ func (connManager *ConnectionManager) AddConnection(driver string, username stri
 
 	if username != "auth" {
 		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER)")
-		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS bills (label TEXT, amount INTEGER, billingDate TEXT)")
+		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT)")
 	}
 
 	return db

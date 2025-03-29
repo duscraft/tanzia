@@ -56,7 +56,9 @@ func main() {
 	defer connManager.CloseConnection("auth")
 
 	http.HandleFunc("GET /persons", domains.PersonHandler)
+	http.HandleFunc("POST /persons", domains.AddPersonHandler)
 	http.HandleFunc("GET /bills", domains.BillsHandler)
+	http.HandleFunc("POST /bills", domains.AddBillHandler)
 	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
 	http.HandleFunc("POST /login", domains.LoginHandler)
 	http.HandleFunc("GET /logout", domains.LogoutHandler)

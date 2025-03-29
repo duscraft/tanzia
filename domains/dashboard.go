@@ -7,8 +7,9 @@ import (
 )
 
 type DashboardData struct {
-	persons []Person
-	bills   []Bill
+	Persons        []Person
+	Bills          []Bill
+	TotalTantiemes int
 }
 
 func getDashboardData(username string) DashboardData {
@@ -17,8 +18,9 @@ func getDashboardData(username string) DashboardData {
 	personRows, _ := db.Query("SELECT * FROM persons")
 	billRows, _ := db.Query("SELECT * FROM bills")
 
-	var persons []Person
-	var bills []Bill
+	var Persons []Person
+	var Bills []Bill
+	var TotalTantiemes int = 0
 
 	for personRows.Next() {
 		var person Person
@@ -26,21 +28,23 @@ func getDashboardData(username string) DashboardData {
 		if err != nil {
 			panic(err)
 		}
-		persons = append(persons, person)
+		Persons = append(Persons, person)
+		TotalTantiemes += person.Tantieme
 	}
 
 	for billRows.Next() {
 		var bill Bill
-		err := billRows.Scan(&bill.Label, &bill.Amount, &bill.BillingDate)
+		err := billRows.Scan(&bill.Label, &bill.Amount)
 		if err != nil {
 			panic(err)
 		}
-		bills = append(bills, bill)
+		Bills = append(Bills, bill)
 	}
 
 	return DashboardData{
-		persons,
-		bills,
+		Persons,
+		Bills,
+		TotalTantiemes,
 	}
 }
 
