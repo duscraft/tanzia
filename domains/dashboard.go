@@ -20,7 +20,7 @@ func getDashboardData(username string) DashboardData {
 
 	var Persons []Person
 	var Bills []Bill
-	var TotalTantiemes int = 0
+	var TotalTantiemes = 0
 
 	for personRows.Next() {
 		var person Person
@@ -51,7 +51,7 @@ func getDashboardData(username string) DashboardData {
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	username, ok := GetAuthenticatedUsername(w, r)
 
-	if ok != true {
+	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}

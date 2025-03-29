@@ -61,7 +61,7 @@ func (connManager *ConnectionManager) AddConnection(driver string, username stri
 func (connManager *ConnectionManager) CloseConnection(username string) {
 	conn, ok := connManager.connections[username]
 	if ok {
-		conn.db.Close()
+		_ = conn.db.Close()
 		delete(connManager.connections, username)
 	}
 }

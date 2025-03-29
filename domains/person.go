@@ -15,7 +15,7 @@ type Person struct {
 func PersonHandler(w http.ResponseWriter, r *http.Request) {
 	_, ok := GetAuthenticatedUsername(w, r)
 
-	if ok != true {
+	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
@@ -31,7 +31,7 @@ func PersonHandler(w http.ResponseWriter, r *http.Request) {
 func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
 	username, ok := GetAuthenticatedUsername(w, r)
 
-	if ok != true {
+	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}

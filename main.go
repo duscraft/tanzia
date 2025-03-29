@@ -64,6 +64,6 @@ func main() {
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
 	http.HandleFunc("GET /", indexHandler)
 
-	fmt.Fprint(os.Stdout, "Listening on port ", os.Getenv("PORT"), "...")
+	_, _ = fmt.Fprint(os.Stdout, "Listening on port ", os.Getenv("PORT"), "...")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil))
 }
