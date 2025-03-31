@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/go-session/redis/v3"
 	"github.com/go-session/session/v3"
-	"github.com/joho/godotenv"
 	"html/template"
 	"log"
 	"net/http"
@@ -38,11 +37,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
 			Addr: "127.0.0.1:6379",
@@ -64,6 +58,6 @@ func main() {
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
 	http.HandleFunc("GET /", indexHandler)
 
-	_, _ = fmt.Fprint(os.Stdout, "Listening on port ", os.Getenv("PORT"), "...")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil))
+	_, _ = fmt.Fprint(os.Stdout, "Listening on port 8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
