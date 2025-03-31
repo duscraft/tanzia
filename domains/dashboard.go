@@ -9,6 +9,7 @@ import (
 type DashboardData struct {
 	Persons        []Person
 	Bills          []Bill
+	Provisions     []Provision
 	TotalTantiemes int
 }
 
@@ -17,9 +18,11 @@ func getDashboardData(username string) DashboardData {
 
 	personRows, _ := db.Query("SELECT * FROM persons")
 	billRows, _ := db.Query("SELECT * FROM bills")
+	provisionRows, _ := db.Query("SELECT * FROM provisions")
 
 	var Persons []Person
 	var Bills []Bill
+	var Provisions []Provision
 	var TotalTantiemes = 0
 
 	for personRows.Next() {
@@ -41,9 +44,19 @@ func getDashboardData(username string) DashboardData {
 		Bills = append(Bills, bill)
 	}
 
+	for provisionRows.Next() {
+		var provision Provision
+		err := provisionRows.Scan(&provision.Label, &provision.Amount)
+		if err != nil {
+			panic(err)
+		}
+		Provisions = append(Provisions, provision)
+	}
+
 	return DashboardData{
 		Persons,
 		Bills,
+		Provisions,
 		TotalTantiemes,
 	}
 }

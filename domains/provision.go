@@ -7,12 +7,12 @@ import (
 	"tantieme/helpers"
 )
 
-type Bill struct {
+type Provision struct {
 	Label  string
 	Amount float64
 }
 
-func AddBillHandler(w http.ResponseWriter, r *http.Request) {
+func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
 	username, ok := GetAuthenticatedUsername(w, r)
 
 	if !ok {
@@ -23,15 +23,15 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	db := helpers.GetConnectionManager().GetConnection("sqlite3", username)
 
 	amount, _ := strconv.ParseFloat(r.FormValue("amount"), 64)
-	_, err := db.Exec("INSERT INTO bills (label, amount) VALUES (?, ?)", r.FormValue("label"), amount)
+	_, err := db.Exec("INSERT INTO provisions (label, amount) VALUES (?, ?)", r.FormValue("label"), amount)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	http.Redirect(w, r, "/dashboard#bill_added", http.StatusFound)
+	http.Redirect(w, r, "/dashboard#provision_added", http.StatusFound)
 }
 
-func BillsHandler(w http.ResponseWriter, r *http.Request) {
+func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
 	_, ok := GetAuthenticatedUsername(w, r)
 
 	if !ok {
@@ -39,7 +39,7 @@ func BillsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("templates/edit-bills.html")
+	t, _ := template.ParseFiles("templates/edit-provisions.html")
 	err := t.Execute(w, nil)
 
 	if err != nil {
