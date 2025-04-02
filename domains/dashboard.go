@@ -11,6 +11,7 @@ type DashboardData struct {
 	Bills          []Bill
 	Provisions     []Provision
 	TotalTantiemes int
+	Balance        float64
 }
 
 func getDashboardData(username string) DashboardData {
@@ -23,7 +24,8 @@ func getDashboardData(username string) DashboardData {
 	var Persons []Person
 	var Bills []Bill
 	var Provisions []Provision
-	var TotalTantiemes = 0
+	var Balance float64
+	TotalTantiemes := 0
 
 	for personRows.Next() {
 		var person Person
@@ -41,6 +43,7 @@ func getDashboardData(username string) DashboardData {
 		if err != nil {
 			panic(err)
 		}
+		Balance -= bill.Amount
 		Bills = append(Bills, bill)
 	}
 
@@ -50,6 +53,7 @@ func getDashboardData(username string) DashboardData {
 		if err != nil {
 			panic(err)
 		}
+		Balance += provision.Amount
 		Provisions = append(Provisions, provision)
 	}
 
@@ -58,6 +62,7 @@ func getDashboardData(username string) DashboardData {
 		Bills,
 		Provisions,
 		TotalTantiemes,
+		Balance,
 	}
 }
 
@@ -73,7 +78,6 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("templates/dashboard.html")
 	err := t.Execute(w, data)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

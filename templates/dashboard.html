@@ -8,13 +8,52 @@
 </head>
 {{ $persons := .Persons }}
 {{ $bills := .Bills }}
+{{ $provisions := .Provisions }}
 {{ $totalTantiemes := .TotalTantiemes }}
-<body class="bg-gray-200 h-screen flex justify-center items-center">
+<body class="bg-gray-200 h-screen flex flex-col justify-center items-center relative">
+    <div class="w-full p-6 m-0 bg-white shadow-md fixed top-0">
+      <div class="w-full flex justify-between">
+        <p>Tantieme</p>
+        <a href="/persons" ><button class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 mr-2">Ajout de propriétaire</button></a>
+      </div>
+    </div>
+<div class="max-w-5xl w-full p-6 bg-white rounded-lg shadow-md mb-8">
+    <div class="flex justify-between mb-4">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Provisions de charges</h2>
+        <a href="/provisions" ><button class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 mr-2">Ajouter des provisions de charges</button></a>
+    </div>
+    {{if or (eq (len $provisions) 0) (eq (len $persons) 0) }}
+        <p>Vous n'avez pas encore ajouté de propriétaire ou de provisions de charges.</p>
+        <p>Veuillez en ajouter pour afficher le tableau.</p>
+    {{else}}
+    <table class="w-full table-auto border-collapse border border-gray-400">
+        <thead>
+        <tr>
+            <th class="bg-gray-100 border border-gray-400 p-2 text-gray-600">Provisions</th>
+            {{range $person := $persons}}
+            <th class="bg-gray-100 border border-gray-400 p-2 text-gray-600">{{$person.Name}}</th>
+            {{end}}
+            <th class="bg-gray-100 border border-gray-400 p-2 text-gray-600">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range $provision := $provisions}}
+        <tr>
+            <td class="border border-gray-400 p-2 text-gray-600">{{$provision.Label}}</td>
+            {{range $person := $persons}}
+            <td class="border border-gray-400 p-2 text-gray-600">{{printf "%.2f" ($person.CalculateProvision $totalTantiemes $provision)}} €</td>
+            {{end}}
+            <td class="border border-gray-400 p-2 text-gray-600">{{$provision.Amount}} €</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+</div>
 <div class="max-w-5xl w-full p-6 bg-white rounded-lg shadow-md">
+    <div class="flex justify-between mb-4">
     <h2 class="text-3xl font-bold text-gray-800 mb-4">Calcul des coûts par propriétaire</h2>
-    <div class="flex justify-end mb-4">
-        <a href="/persons" ><button class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 mr-2">Add Person</button></a>
-        <a href="/bills" ><button class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700">Add Bill</button></a>
+        <a href="/bills" ><button class="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700">Ajouter des travaux</button></a>
     </div>
     {{if or (eq (len $persons) 0) (eq (len $bills) 0)}}
         <p>Vous n'avez pas encore ajouté de propriétaire ou de travaux.</p>
@@ -31,7 +70,6 @@
         </tr>
         </thead>
         <tbody>
-        <tr></tr>
         {{range $bill := $bills}}
         <tr>
             <td class="border border-gray-400 p-2 text-gray-600">{{$bill.Label}}</td>
@@ -41,6 +79,13 @@
             <td class="border border-gray-400 p-2 text-gray-600">{{$bill.Amount}} €</td>
         </tr>
         {{end}}
+        <tr>
+            <td class="border border-gray-400 p-2 text-gray-600 font-bold">Solde restant</td>
+            {{range $person := $persons}}
+            <td class="border border-gray-400 p-2 text-gray-600 font-bold">{{printf "%.2f" ($person.CalculateLeft $totalTantiemes $bills $provisions)}} €</td>
+            {{end}}
+            <td class="border border-gray-400 p-2 text-gray-600 font-bold">{{.Balance}} €</td>
+        </tr>
         </tbody>
     </table>
     {{end}}

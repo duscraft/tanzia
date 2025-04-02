@@ -2,21 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-session/redis/v3"
-	"github.com/go-session/session/v3"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"tantieme/domains"
 	"tantieme/helpers"
+
+	"github.com/go-session/redis/v3"
+	"github.com/go-session/session/v3"
 )
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/404.html")
 	w.WriteHeader(http.StatusNotFound)
 	err := t.Execute(w, nil)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -30,7 +30,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("templates/index.html")
 	err := t.Execute(w, nil)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -53,6 +52,8 @@ func main() {
 	http.HandleFunc("POST /persons", domains.AddPersonHandler)
 	http.HandleFunc("GET /bills", domains.BillsHandler)
 	http.HandleFunc("POST /bills", domains.AddBillHandler)
+	http.HandleFunc("GET /provisions", domains.ProvisionsHandler)
+	http.HandleFunc("POST /provisions", domains.AddProvisionHandler)
 	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
 	http.HandleFunc("POST /login", domains.LoginHandler)
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
