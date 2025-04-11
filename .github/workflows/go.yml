@@ -37,7 +37,7 @@ jobs:
       - name: Build the docker image
         run: docker build . --file Dockerfile --tag tantieme
       - name: Login to registry
-        run: echo "${{ secrets.PAT_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --pasword-stdin"
+        run:  docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.PAT_TOKEN }}"
       - name: Push the docker image
         run: |
           docker tag tantieme ghcr.io/${{ github.repository_owner }}/tantieme:latest
