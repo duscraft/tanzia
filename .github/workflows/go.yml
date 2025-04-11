@@ -29,3 +29,14 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the docker image
+        run: docker build . --file Dockerfile --tag tantieme:latest
+      - name: Login to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --pasword-stdin"
+      - name: Push the docker image
+        run: docker push ghcr.io/${{ github.repository_owner }}/tantieme:latest
