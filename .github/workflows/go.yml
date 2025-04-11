@@ -35,8 +35,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the docker image
-        run: docker build . --file Dockerfile --tag tantieme:latest
+        run: docker build . --file Dockerfile --tag tantieme
       - name: Login to registry
         run: echo "${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --pasword-stdin"
       - name: Push the docker image
-        run: docker push ghcr.io/${{ github.repository_owner }}/tantieme:latest
+        run: |
+          docker tag tantieme ghcr.io/${{ github.repository_owner }}/tantieme:latest
+          docker push ghcr.io/${{ github.repository_owner }}/tantieme:latest
