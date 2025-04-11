@@ -36,9 +36,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	redisUrl := os.Getenv("REDIS_URL")
+	if len(redisUrl) == 0 {
+		redisUrl = "127.0.0.1"
+	}
+	redisPort := os.Getenv("REDIS_PORT")
+	if len(redisPort) == 0 {
+		redisPort = "6379"
+	}
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: "127.0.0.1:6379",
+			Addr: fmt.Sprintf("%s:%s", redisUrl, redisPort),
 			DB:   0,
 		})),
 	)
@@ -59,6 +67,11 @@ func main() {
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
 	http.HandleFunc("GET /", indexHandler)
 
-	_, _ = fmt.Fprint(os.Stdout, "Listening on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8080"
+	}
+
+	_, _ = fmt.Fprintf(os.Stdout, "Listening on port %s...", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
