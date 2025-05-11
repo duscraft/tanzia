@@ -3,11 +3,16 @@ package helpers
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"sync"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
-var instance *ConnectionManager
+var (
+	instance *ConnectionManager
+	once     sync.Once
+)
 
 type Connection struct {
 	db     *sql.DB
@@ -15,63 +20,84 @@ type Connection struct {
 }
 
 type ConnectionManager struct {
-	connections map[string]Connection
+	connection Connection
+	mu         sync.Mutex
 }
 
 func GetConnectionManager() *ConnectionManager {
-	if instance == nil {
-		instance = &ConnectionManager{
-			connections: map[string]Connection{},
-		}
-
-		return instance
-	}
-
+	once.Do(func() {
+		instance = &ConnectionManager{}
+	})
 	return instance
 }
 
-func (connManager *ConnectionManager) GetConnection(driver string, username string) *sql.DB {
-	conn, ok := connManager.connections[username]
+func (connManager *ConnectionManager) GetConnection(driver string) (*sql.DB, error) {
+	connManager.mu.Lock()
+	defer connManager.mu.Unlock()
 
-	if ok {
-		return conn.db
-	} else {
-		return connManager.AddConnection(driver, username)
+	if connManager.connection.db != nil {
+		return connManager.connection.db, nil
 	}
+
+	return connManager.AddConnection(driver)
 }
 
-func (connManager *ConnectionManager) AddConnection(driver string, username string) *sql.DB {
-	db, err := sql.Open(driver, getUrl(driver, username))
+func (connManager *ConnectionManager) AddConnection(driver string) (*sql.DB, error) {
+	db, err := sql.Open(driver, getUrl(driver))
 	if err != nil {
-		fmt.Println(err)
+		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 
-	connManager.connections[username] = Connection{
-		db,
-		driver,
+	connManager.connection = Connection{
+		db:     db,
+		driver: driver,
 	}
 
-	if username != "auth" {
-		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER)")
-		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT)")
-		_, _ = db.Exec("CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT)")
+	if err := createTables(db); err != nil {
+		return nil, fmt.Errorf("failed to create tables: %w", err)
 	}
 
-	return db
+	return db, nil
 }
 
-func (connManager *ConnectionManager) CloseConnection(username string) {
-	conn, ok := connManager.connections[username]
-	if ok {
-		_ = conn.db.Close()
-		delete(connManager.connections, username)
+func (connManager *ConnectionManager) CloseConnection() error {
+	connManager.mu.Lock()
+	defer connManager.mu.Unlock()
+
+	if connManager.connection.db != nil {
+		if err := connManager.connection.db.Close(); err != nil {
+			return fmt.Errorf("failed to close database connection: %w", err)
+		}
+		connManager.connection.db = nil
 	}
+	return nil
 }
 
-func getUrl(driver string, username string) string {
-	if driver == "sqlite3" {
-		return fmt.Sprintf("file:%s.db", username)
-	} else {
-		panic(fmt.Sprintf("driver %s is not implemented.", driver))
+func getUrl(driver string) string {
+	if driver == "postgres" {
+		hostname := os.Getenv("PG_HOSTNAME")
+		port := os.Getenv("PG_PORT")
+		user := os.Getenv("PG_USERNAME")
+		password := os.Getenv("PG_PASSWORD")
+		dbname := os.Getenv("PG_DBNAME")
+		return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			hostname, port, user, password, dbname)
 	}
+	return ""
+}
+
+func createTables(db *sql.DB) error {
+	queries := []string{
+		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT, password TEXT)",
+		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER, userId INTEGER REFERENCES users(id))",
+		"CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
+		"CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
+	}
+
+	for _, query := range queries {
+		if _, err := db.Exec(query); err != nil {
+			return fmt.Errorf("failed to execute query: %w", err)
+		}
+	}
+	return nil
 }

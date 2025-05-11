@@ -14,12 +14,15 @@ type DashboardData struct {
 	Balance        float64
 }
 
-func getDashboardData(username string) DashboardData {
-	db := helpers.GetConnectionManager().GetConnection("sqlite3", username)
+func getDashboardData(userId string) DashboardData {
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		panic(err)
+	}
 
-	personRows, _ := db.Query("SELECT * FROM persons")
-	billRows, _ := db.Query("SELECT * FROM bills")
-	provisionRows, _ := db.Query("SELECT * FROM provisions")
+	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = ?", userId)
+	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = ?", userId)
+	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = ?", userId)
 
 	var Persons []Person
 	var Bills []Bill
@@ -67,14 +70,14 @@ func getDashboardData(username string) DashboardData {
 }
 
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
-	username, ok := GetAuthenticatedUsername(w, r)
+	userId, ok := GetAuthenticatedUserId(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	data := getDashboardData(username)
+	data := getDashboardData(userId)
 
 	t, _ := template.ParseFiles("templates/dashboard.html")
 	err := t.Execute(w, data)

@@ -13,7 +13,7 @@ type Person struct {
 }
 
 func PersonHandler(w http.ResponseWriter, r *http.Request) {
-	_, ok := GetAuthenticatedUsername(w, r)
+	_, ok := GetAuthenticatedUserId(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
@@ -28,16 +28,21 @@ func PersonHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
-	username, ok := GetAuthenticatedUsername(w, r)
+	userId, ok := GetAuthenticatedUserId(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	db := helpers.GetConnectionManager().GetConnection("sqlite3", username)
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	tantieme, _ := strconv.Atoi(r.FormValue("tantieme"))
-	_, err := db.Exec("INSERT INTO persons (name, tantieme) VALUES (?, ?)", r.FormValue("name"), tantieme)
+	_, err = db.Exec("INSERT INTO persons (name, tantieme, userId) VALUES (?, ?, ?)", r.FormValue("name"), tantieme, userId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

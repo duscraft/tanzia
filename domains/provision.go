@@ -13,17 +13,21 @@ type Provision struct {
 }
 
 func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
-	username, ok := GetAuthenticatedUsername(w, r)
+	userId, ok := GetAuthenticatedUserId(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	db := helpers.GetConnectionManager().GetConnection("sqlite3", username)
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	amount, _ := strconv.ParseFloat(r.FormValue("amount"), 64)
-	_, err := db.Exec("INSERT INTO provisions (label, amount) VALUES (?, ?)", r.FormValue("label"), amount)
+	_, err = db.Exec("INSERT INTO provisions (label, amount, userId) VALUES (?, ?, ?)", r.FormValue("label"), amount, userId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -32,7 +36,7 @@ func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
-	_, ok := GetAuthenticatedUsername(w, r)
+	_, ok := GetAuthenticatedUserId(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)

@@ -3,11 +3,12 @@ package domains
 import (
 	"context"
 	"fmt"
-	"github.com/go-session/session/v3"
-	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"tantieme/helpers"
+
+	"github.com/go-session/session/v3"
+	"github.com/google/uuid"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,9 +20,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	db := helpers.GetConnectionManager().GetConnection("sqlite3", "auth")
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	result, err := db.Query("SELECT username, password FROM users WHERE username = ? AND password = ?", username, password)
+	var userId string
+	result, err := db.Query("SELECT id FROM users WHERE username = ? AND password = ?", username, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,8 +37,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = result.Scan(&userId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	cookie := uuid.New()
-	store.Set(cookie.String(), username)
+	store.Set(cookie.String(), userId)
 
 	err = store.Save()
 	if err != nil {
@@ -60,7 +72,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func GetAuthenticatedUsername(w http.ResponseWriter, r *http.Request) (string, bool) {
+func GetAuthenticatedUserId(w http.ResponseWriter, r *http.Request) (string, bool) {
 	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
 		log.Fatal("Could not connect to redis")
@@ -70,7 +82,7 @@ func GetAuthenticatedUsername(w http.ResponseWriter, r *http.Request) (string, b
 	if err != nil {
 		return "", false
 	}
-	username, ok := store.Get(cookie.Value)
+	id, ok := store.Get(cookie.Value)
 
-	return fmt.Sprintf("%s", username), ok
+	return fmt.Sprintf("%s", id), ok
 }

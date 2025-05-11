@@ -13,7 +13,7 @@ import (
 	"github.com/go-session/session/v3"
 )
 
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles("templates/404.html")
 	w.WriteHeader(http.StatusNotFound)
 	err := t.Execute(w, nil)
@@ -53,8 +53,8 @@ func main() {
 
 	connManager := helpers.GetConnectionManager()
 
-	connManager.AddConnection("sqlite3", "auth")
-	defer connManager.CloseConnection("auth")
+	connManager.AddConnection("postgres")
+	defer connManager.CloseConnection()
 
 	http.HandleFunc("GET /persons", domains.PersonHandler)
 	http.HandleFunc("POST /persons", domains.AddPersonHandler)
