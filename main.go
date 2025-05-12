@@ -53,8 +53,12 @@ func main() {
 
 	connManager := helpers.GetConnectionManager()
 
-	connManager.AddConnection("postgres")
-	defer connManager.CloseConnection()
+	_, _ = connManager.AddConnection("postgres")
+	defer func() {
+		if err := connManager.CloseConnection(); err != nil {
+			log.Printf("Error closing database connection: %v", err)
+		}
+	}()
 
 	http.HandleFunc("GET /persons", domains.PersonHandler)
 	http.HandleFunc("POST /persons", domains.AddPersonHandler)
