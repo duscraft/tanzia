@@ -35,6 +35,22 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/login.html")
+	err := t.Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/signup.html")
+	err := t.Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func main() {
 	redisUrl := os.Getenv("REDIS_URL")
 	if len(redisUrl) == 0 {
@@ -69,6 +85,9 @@ func main() {
 	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
 	http.HandleFunc("POST /login", domains.LoginHandler)
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
+	http.HandleFunc("GET /login", loginHandler)
+	http.HandleFunc("GET /signup", signupHandler)
+	http.HandleFunc("POST /signup", domains.SignupHandler)
 	http.HandleFunc("GET /", indexHandler)
 
 	port := os.Getenv("PORT")

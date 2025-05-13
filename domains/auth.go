@@ -86,3 +86,27 @@ func GetAuthenticatedUserId(w http.ResponseWriter, r *http.Request) (string, boo
 
 	return fmt.Sprintf("%s", id), ok
 }
+
+func SignupHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := session.Start(context.Background(), w, r)
+	if err != nil {
+		log.Fatal("Could not connect to redis")
+	}
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, password)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/login", http.StatusFound)
+}
