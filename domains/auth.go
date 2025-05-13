@@ -69,7 +69,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{Name: "tantieme-session", Value: "", MaxAge: -1, HttpOnly: true})
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/login", http.StatusFound)
 }
 
 func GetAuthenticatedUserId(w http.ResponseWriter, r *http.Request) (string, bool) {
