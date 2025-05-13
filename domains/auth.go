@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"tantieme/helpers"
 
 	"github.com/go-session/session/v3"
@@ -93,8 +94,24 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Could not connect to redis")
 	}
 
-	username := r.FormValue("username")
+	email := r.FormValue("email")
+	name := r.FormValue("name")
 	password := r.FormValue("password")
+
+	if email == "" || name == "" {
+		http.Error(w, "Email and name cannot be empty", http.StatusBadRequest)
+		return
+	}
+
+	if !isValidEmail(email) {
+		http.Error(w, "Invalid email format", http.StatusBadRequest)
+		return
+	}
+
+	if len(password) < 8 {
+		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+		return
+	}
 
 	db, err := helpers.GetConnectionManager().GetConnection("postgres")
 	if err != nil {
@@ -102,11 +119,18 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, password)
+	_, err = db.Exec("INSERT INTO users (email, name, password) VALUES (?, ?, ?)", email, name, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	http.Redirect(w, r, "/login", http.StatusFound)
+}
+
+func isValidEmail(email string) bool {
+	// Simple regex for email validation
+	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	re := regexp.MustCompile(emailRegex)
+	return re.MatchString(email)
 }
