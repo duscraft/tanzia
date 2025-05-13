@@ -12,3 +12,4 @@ go.work.sum
 *.db
 tantieme
 vendor
+tmp
