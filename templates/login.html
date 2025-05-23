@@ -38,6 +38,9 @@
       <h2 class="text-3xl font-extrabold text-accentlighter mb-8 text-center">
         Connexion à Tantieme
       </h2>
+      <div id="login-error" class="hidden text-red-400 text-center mb-4 font-semibold">
+        E-mail ou mot de passe incorrect.
+      </div>
       <form action="/login" method="POST" class="space-y-6">
         <div>
           <label for="email" class="block mb-2 text-lightgray font-semibold"
@@ -67,11 +70,22 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-accentblue hover:bg-accentdarker text-white py-3 rounded-lg font-bold shadow-lg transition"
+          class="w-full bg-accentlighter hover:bg-accentdarker text-white py-3 rounded-lg font-bold shadow-lg transition"
         >
           Se connecter
         </button>
+        <a
+          href="/signup"
+          class="w-full inline-block text-center hover:bg-accentdarker text-white p-3 rounded-lg font-bold transition"
+        >
+          Pas encore de compte ?
+        </a>
       </form>
     </div>
+    <script>
+      if (window.location.hash === "#unauthorized") {
+        document.getElementById("login-error").classList.remove("hidden");
+      }
+    </script>
   </body>
 </html>

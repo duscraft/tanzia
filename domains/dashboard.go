@@ -20,9 +20,9 @@ func getDashboardData(userId string) DashboardData {
 		panic(err)
 	}
 
-	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = ?", userId)
-	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = ?", userId)
-	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = ?", userId)
+	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = $1", userId)
+	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userId)
+	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userId)
 
 	var Persons []Person
 	var Bills []Bill

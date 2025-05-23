@@ -27,7 +27,7 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	amount, _ := strconv.ParseFloat(r.FormValue("amount"), 64)
-	_, err = db.Exec("INSERT INTO bills (label, amount, userId) VALUES (?, ?, ?)", r.FormValue("label"), amount, userId)
+	_, err = db.Exec("INSERT INTO bills (label, amount, userId) VALUES ($1, $2, $3)", r.FormValue("label"), amount, userId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -45,7 +45,6 @@ func BillsHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("templates/edit-bills.html")
 	err := t.Execute(w, nil)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

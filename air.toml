@@ -3,6 +3,8 @@ cmd = "go build -o ./tantieme ."
 bin = "./tantieme"
 include_ext = ["go", "tpl", "tmpl", "html"]
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+root = "/app"
+poll = true
 
 [log]
 time = true

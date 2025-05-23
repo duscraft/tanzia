@@ -42,7 +42,7 @@ func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tantieme, _ := strconv.Atoi(r.FormValue("tantieme"))
-	_, err = db.Exec("INSERT INTO persons (name, tantieme, userId) VALUES (?, ?, ?)", r.FormValue("name"), tantieme, userId)
+	_, err = db.Exec("INSERT INTO persons (name, tantieme, userId) VALUES ($1, $2, $3)", r.FormValue("name"), tantieme, userId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

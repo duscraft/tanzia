@@ -17,4 +17,4 @@ WORKDIR /app
 
 COPY --from=builder /app/tantieme /app/tantieme
 
-ENTRYPOINT ["air"]
+CMD ["air", "-c", "/app/air.toml"]

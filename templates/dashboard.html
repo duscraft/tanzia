@@ -43,12 +43,15 @@
     <nav
       class="w-full px-6 sm:px-12 py-6 flex justify-between items-center bg-darkbg/95 backdrop-blur-sm sticky top-0 z-30 shadow-sm"
     >
+      <div class="flex gap-5 items-center">
       <a
         href="/dashboard"
         class="text-3xl font-extrabold text-accentblue tracking-tight hover:text-accentlighter"
         >Tantieme</a
       >
+        </div>
       <div class="flex gap-5">
+        <a href="/logout" class="text-lightgray hover:text-accentlighter px-6 py-2 font-semibold transition">Se déconnecter</a>
         <a
           href="/persons"
           class="bg-accentblue hover:bg-accentdarker text-white px-6 py-2 font-semibold rounded-lg shadow-md transition"
@@ -170,8 +173,8 @@
                 <td class="border border-blue p-3">Solde restant</td>
                 {{range $person := .Persons}}
                 <td class="border border-blue p-3">
-                  {{printf "%.2f" ($person.CalculateLeft .TotalTantiemes .Bills
-                  .Provisions)}} €
+                  {{printf "%.2f" ($person.CalculateLeft $.TotalTantiemes $.Bills
+                  $.Provisions)}} €
                 </td>
                 {{end}}
                 <td class="border border-blue p-3">{{.Balance}} €</td>

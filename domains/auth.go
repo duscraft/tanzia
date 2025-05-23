@@ -18,7 +18,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Could not connect to redis")
 	}
 
-	username := r.FormValue("username")
+	email := r.FormValue("email")
 	password := r.FormValue("password")
 
 	db, err := helpers.GetConnectionManager().GetConnection("postgres")
@@ -28,13 +28,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userId string
-	result, err := db.Query("SELECT id FROM users WHERE username = ? AND password = ?", username, password)
+	result, err := db.Query("SELECT id FROM users WHERE email = $1 AND password = $2", email, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !result.Next() {
-		http.Redirect(w, r, "/#unauthorized", http.StatusFound)
+		http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
 		return
 	}
 
@@ -119,7 +119,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO users (email, name, password) VALUES (?, ?, ?)", email, name, password)
+	_, err = db.Exec("INSERT INTO users (email, name, password) VALUES ($1, $2, $3)", email, name, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
