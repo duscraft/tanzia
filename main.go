@@ -14,9 +14,9 @@ import (
 )
 
 func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
-	t, _ := template.ParseFiles("templates/404.html")
+	t, _ := template.ParseFiles("templates/404.html", "templates/base-layout.html")
 	w.WriteHeader(http.StatusNotFound)
-	err := t.Execute(w, nil)
+	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -28,24 +28,40 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("templates/index.html")
-	err := t.Execute(w, nil)
+	t, _ := template.ParseFiles("templates/index.html", "templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func cgvHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/cgv.html", "templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func legalsHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/legals.html", "templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("templates/login.html")
-	err := t.Execute(w, nil)
+	t, _ := template.ParseFiles("templates/login.html", "templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("templates/signup.html")
-	err := t.Execute(w, nil)
+	t, _ := template.ParseFiles("templates/signup.html", "templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -88,6 +104,8 @@ func main() {
 	http.HandleFunc("GET /login", loginHandler)
 	http.HandleFunc("GET /signup", signupHandler)
 	http.HandleFunc("POST /signup", domains.SignupHandler)
+	http.HandleFunc("GET /cgv", cgvHandler)
+	http.HandleFunc("GET /legals", legalsHandler)
 	http.HandleFunc("GET /", indexHandler)
 
 	port := os.Getenv("PORT")

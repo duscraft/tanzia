@@ -1,115 +1,75 @@
-<!doctype html>
-<html lang="fr" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tantieme - Créer un compte</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              darkbg: "#10141a",
-              darkblue: "#1e293b",
-              lightgray: "#f4f5f7",
-              accentblue: "#3b82f6",
-              accentdarkblue: "#2563eb",
-              accentdarker: "#1e40af",
-              accentlighter: "#60a5fa",
-            },
-          },
-        },
-      };
-      function validateSignupForm(e) {
-        const pw = document.getElementById('password').value;
-        const cpw = document.getElementById('confirm_password').value;
-        if (pw !== cpw) {
-          e.preventDefault();
-          alert("Les mots de passe ne correspondent pas.");
-          return false;
-        }
-        return true;
-      }
-    </script>
-    <style>
-      body {
-        background: #10141a;
-        color: #f4f5f7;
-      }
-    </style>
-  </head>
-  <body
-    class="bg-darkbg h-screen flex justify-center items-center font-sans selection:bg-accentblue selection:text-white"
+{{define "content"}}
+<main
+  class="flex-grow flex flex-col items-center justify-center pb-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
+>
+  <div
+    class="max-w-md w-full p-8 bg-[#232e3f] rounded-3xl shadow-xl border border-blue-800"
   >
-    <div
-      class="max-w-md w-full p-8 bg-[#232e3f] rounded-3xl shadow-xl border border-blue-800"
-    >
-      <h2 class="text-3xl font-extrabold text-accentlighter mb-8 text-center">
-        Créer un compte Tantieme
-      </h2>
-      <form action="/signup" method="POST" class="space-y-8" onsubmit="return validateSignupForm(event)">
-        <div>
-          <label for="email" class="block mb-2 text-lightgray font-semibold"
-            >Email</label
-          >
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-            placeholder="Votre e-mail"
-          />
-        </div>
-        <div>
-          <label for="name" class="block mb-2 text-lightgray font-semibold"
-            >Nom d'utilisateur</label
-          >
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-            placeholder="Votre nom d'utilisateur"
-          />
-        </div>
-        <div>
-          <label for="password" class="block mb-2 text-lightgray font-semibold"
-            >Mot de passe</label
-          >
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-            placeholder="Votre mot de passe"
-          />
-        </div>
-        <div>
-          <label
-            for="confirm_password"
-            class="block mb-2 text-lightgray font-semibold"
-            >Confirmer le mot de passe</label
-          >
-          <input
-            type="password"
-            id="confirm_password"
-            name="confirm_password"
-            required
-            class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-            placeholder="Confirmez votre mot de passe"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full bg-accentblue hover:bg-accentdarker text-white mt-4 py-3 rounded-lg font-bold shadow-lg transition"
+    <h2 class="text-3xl font-extrabold text-accentlighter mb-8 text-center">
+      Créer un compte Tantieme
+    </h2>
+    <form action="/signup" method="POST" class="space-y-8" onsubmit="return validateSignupForm(event)">
+      <div>
+        <label for="email" class="block mb-2 text-lightgray font-semibold"
+          >Email</label
         >
-          S'inscrire
-        </button>
-      </form>
-    </div>
-  </body>
-</html>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
+          placeholder="Votre e-mail"
+        />
+      </div>
+      <div>
+        <label for="name" class="block mb-2 text-lightgray font-semibold"
+          >Nom d'utilisateur</label
+        >
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
+          placeholder="Votre nom d'utilisateur"
+        />
+      </div>
+      <div>
+        <label for="password" class="block mb-2 text-lightgray font-semibold"
+          >Mot de passe</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
+          placeholder="Votre mot de passe"
+        />
+      </div>
+      <div>
+        <label
+          for="confirm_password"
+          class="block mb-2 text-lightgray font-semibold"
+          >Confirmer le mot de passe</label
+        >
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          required
+          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
+          placeholder="Confirmez votre mot de passe"
+        />
+      </div>
+      <button
+        type="submit"
+        class="w-full bg-accentblue hover:bg-accentdarker text-white mt-4 py-3 rounded-lg font-bold shadow-lg transition"
+      >
+        S'inscrire
+      </button>
+    </form>
+  </div>
+</main>
+{{end}}

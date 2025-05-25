@@ -1,40 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>404 - Page introuvable</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            darkbg: '#10141a',
-            darkblue: '#1e293b',
-            lightgray: '#f4f5f7',
-            accentblue: '#3b82f6',
-            accentdarkblue: '#2563eb',
-            accentdarker: '#1e40af',
-            accentlighter: '#60a5fa',
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background: #10141a;
-      color: #f4f5f7;
-    }
-  </style>
-</head>
-<body class="h-screen flex flex-col justify-center items-center font-sans selection:bg-accentblue selection:text-white px-4 text-center">
+{{define "content"}}
+<main class="h-screen flex flex-col justify-center items-center font-sans selection:bg-accentblue selection:text-white px-4 text-center">
   <h1 class="text-6xl font-extrabold text-accentblue mb-6 drop-shadow-lg select-none">Erreur 404</h1>
   <p class="mb-8 text-lg text-lightgray max-w-md mx-auto">La page que vous recherchez n'existe pas ou a été déplacée. Merci de vérifier l'URL ou de revenir à l'accueil.</p>
   <img src="https://http.cat/404" alt="404 Not Found" class="w-64 max-w-full rounded-lg shadow-lg mb-8" />
   <a href="/" class="inline-block bg-accentblue hover:bg-accentdarker text-white py-3 px-8 rounded-lg font-semibold shadow-lg transition select-none">
     Retour à l'accueil
   </a>
-</body>
-</html>
+</main>
+{{end}}

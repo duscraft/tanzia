@@ -1,259 +1,84 @@
-<!doctype html>
-<html lang="fr" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tantieme - Votre gestion de copropriété simplifiée</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              darkbg: "#10141a",
-              darkblue: "#1e293b",
-              lightgray: "#f4f5f7",
-              accentblue: "#3b82f6",
-              accentdarkblue: "#2563eb",
-              accentdarker: "#1e40af",
-              accentlighter: "#60a5fa",
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      body {
-        background: linear-gradient(160deg, #10141a 0%, #1e293b 100%);
-        color: #f4f5f7;
-      }
-      .cookie-banner {
-        background: #282f3a;
-        color: #f4f5f7;
-        border-top: 2px solid #334155;
-      }
-    </style>
-  </head>
-  <body
-    class="flex flex-col min-h-screen font-sans selection:bg-accentblue selection:text-white"
+{{define "content"}}
+<!-- Main Content -->
+<main
+  class="flex-grow flex flex-col items-center justify-center py-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
+>
+  <h1
+    class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-accentblue drop-shadow-lg leading-tight"
   >
-    <!-- Header/Navbar -->
-    <nav
-      class="w-full px-6 sm:px-12 py-6 flex justify-between items-center bg-darkbg/95 backdrop-blur-sm sticky top-0 z-30 shadow-sm"
+    La gestion des charges de copropriété <br class="hidden sm:block" />n’a
+    jamais été aussi simple.
+  </h1>
+  <p class="mt-8 text-lg md:text-2xl text-lightgray font-medium max-w-3xl">
+    Tantieme révolutionne le suivi des charges et des provisions,
+    spécialement pensé pour les
+    <span class="text-accentlighter font-bold">syndicats bénévoles</span> et
+    les
+    <span class="text-accentlighter font-bold">petits professionnels</span
+    >.<br />
+    Générez automatiquement vos tableaux de répartition, calculez les soldes
+    et exportez vos comptes en toute simplicité, clairs et sans erreurs.
+  </p>
+  <div class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
+    <a
+      href="/signup"
+      class="bg-accentblue hover:bg-accentdarker text-white text-lg px-10 py-3 rounded-lg font-semibold shadow-lg transition"
+      >Essayez gratuitement</a
     >
-      <a
-        href="/"
-        class="text-3xl font-extrabold text-accentblue tracking-tight hover:text-accentlighter"
-        >Tantieme</a
+  </div>
+  <div
+    class="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 text-lg text-lightgray max-w-4xl"
+  >
+    <div class="flex items-center gap-2">
+      <span
+        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
+        >1</span
       >
-      <div class="flex gap-5 items-center">
-        <a
-          href="/dashboard"
-          class="text-lightgray hover:text-accentlighter font-semibold transition"
-          >Accès tableau</a
-        >
-        <a
-          href="/signup"
-          class="bg-accentblue hover:bg-accentdarker text-white px-6 py-2 font-semibold rounded-lg shadow-md transition"
-          >Créer un compte</a
-        >
-        <a
-          href="/login"
-          class="text-lightgray hover:text-accentlighter font-semibold transition"
-          >Connexion</a
-        >
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main
-      class="flex-grow flex flex-col items-center justify-center py-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
-    >
-      <h1
-        class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-accentblue drop-shadow-lg leading-tight"
-      >
-        La gestion des charges de copropriété<br class="hidden sm:block" />n’a
-        jamais été aussi simple.
-      </h1>
-      <p class="mt-8 text-lg md:text-2xl text-lightgray font-medium max-w-3xl">
-        Tantieme révolutionne le suivi des charges et des provisions,
-        spécialement pensé pour les
-        <span class="text-accentlighter font-bold">syndicats bénévoles</span> et
-        les
-        <span class="text-accentlighter font-bold">petits professionnels</span
-        >.<br />
-        Générez automatiquement vos tableaux de répartition, calculez les soldes
-        et exportez vos comptes en toute simplicité, clairs et sans erreurs.
-      </p>
-      <div class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
-        <a
-          href="/signup"
-          class="bg-accentblue hover:bg-accentdarker text-white text-lg px-10 py-3 rounded-lg font-semibold shadow-lg transition"
-          >Essayez gratuitement</a
-        >
-        <a
-          href="/dashboard"
-          class="border border-accentblue text-accentblue hover:bg-accentblue hover:text-white text-lg px-10 py-3 rounded-lg font-semibold shadow-lg transition"
-          >Découvrir la démo</a
-        >
-      </div>
-      <div
-        class="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-10 text-lg text-lightgray max-w-4xl"
-      >
-        <div class="flex items-center gap-4">
-          <span
-            class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl select-none"
-            >1</span
-          >
-          <p>Ajoutez vos copropriétaires & tantièmes</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <span
-            class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl select-none"
-            >2</span
-          >
-          <p>Indiquez les provisions et les travaux</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <span
-            class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl select-none"
-            >3</span
-          >
-          <p>Obtenez vos tableaux de charges prêts à l’export et sans erreur</p>
-        </div>
-      </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-darkblue text-lightgray py-12 mt-16 px-6 sm:px-12">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            Produit
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a href="/dashboard" class="hover:text-accentlighter transition"
-                >Tableau de bord</a
-              >
-            </li>
-            <li>
-              <a href="/signup" class="hover:text-accentlighter transition"
-                >Créer un compte</a
-              >
-            </li>
-            <li>
-              <a href="/tarifs" class="hover:text-accentlighter transition"
-                >Tarifs</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            À propos
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a
-                href="https://github.com/alaborderie"
-                target="_blank"
-                rel="noopener"
-                class="hover:text-accentlighter transition"
-                >GitHub</a
-              >
-            </li>
-            <li>
-              <a
-                href="https://www.linkedin.com/in/antoine-laborderie/"
-                target="_blank"
-                rel="noopener"
-                class="hover:text-accentlighter transition"
-                >LinkedIn</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            Ressources
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a href="/cgu" class="hover:text-accentlighter transition">CGU</a>
-            </li>
-            <li>
-              <a href="/cgv" class="hover:text-accentlighter transition">CGV</a>
-            </li>
-            <li>
-              <a
-                href="/confidentialite"
-                class="hover:text-accentlighter transition"
-                >Confidentialité</a
-              >
-            </li>
-            <li>
-              <a href="/mentions" class="hover:text-accentlighter transition"
-                >Mentions légales</a
-              >
-            </li>
-            <li>
-              <a href="/cookies" class="hover:text-accentlighter transition"
-                >Cookies</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div
-          class="flex flex-col justify-end items-end text-right text-sm font-light"
-        >
-          <p class="mb-1 text-accentlighter font-semibold text-lg select-none">
-            Tantieme © 2025
-          </p>
-          <p>Simplifiez la gestion de votre copropriété.</p>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Cookie Banner -->
-    <div
-      id="cookie-banner"
-      class="cookie-banner fixed bottom-0 left-0 w-full p-4 flex flex-col sm:flex-row items-center justify-between gap-3 z-50 hidden"
-    >
-      <p class="text-sm sm:text-base max-w-xl">
-        Ce site n’utilise
-        <strong
-          >aucun cookie autre que les cookies de session nécessaires</strong
-        >
-        au bon fonctionnement de l’application. Aucun suivi publicitaire.
-      </p>
-      <button
-        id="cookie-close"
-        class="bg-accentblue hover:bg-accentdarker text-white px-5 py-2 rounded-lg font-semibold transition shadow-sm select-none"
-      >
-        J’ai compris
-      </button>
+      <p class="text-start">Ajoutez vos copropriétaires & tantièmes</p>
     </div>
+    <div class="flex items-center gap-2">
+      <span
+        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
+        >2</span
+      >
+      <p class="text-start">Indiquez les provisions et les travaux</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span
+        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
+        >3</span
+      >
+      <p class="text-start">Obtenez vos tableaux de charges prêts à l’export</p>
+    </div>
+  </div>
+</main>
 
-    <script>
-      // Cookie banner logic: show only once per user, closing stores flag in localStorage
-      document.addEventListener("DOMContentLoaded", () => {
-        const banner = document.getElementById("cookie-banner");
-        const closeBtn = document.getElementById("cookie-close");
-        if (!localStorage.getItem("cookieBannerClosed")) {
-          banner.classList.remove("hidden");
-        }
-        closeBtn.addEventListener("click", () => {
-          banner.classList.add("hidden");
-          localStorage.setItem("cookieBannerClosed", "true");
-        });
-      });
-    </script>
-  </body>
-</html>
+<div class="flex-1 flex flex-col items-center w-full py-24 bg-darkbg">
+  <h2 class="text-4xl font-extrabold text-accentlighter mb-10 text-center">Combien ça coûte ?</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl px-4">
+    <!-- Free Tier -->
+    <div class="bg-darkblue rounded-2xl p-8 flex flex-col items-center border border-blue-700">
+      <h3 class="text-2xl font-bold text-accentlighter mb-4">Gratuit</h3>
+      <p class="text-lg mb-6 text-lightgray text-center">Pour les petites copropriétés ou pour essayer Tantieme.</p>
+      <ul class="mb-8 space-y-3 text-lightgray">
+        <li>👥 Jusqu'à <span class="font-semibold text-accentblue">8 copropriétaires</span></li>
+        <li>🛠️ <span class="font-semibold text-accentblue">5 travaux</span> maximum</li>
+        <li>💶 <span class="font-semibold text-accentblue">5 provisions de charges</span> maximum</li>
+      </ul>
+      <span class="text-3xl font-extrabold text-accentblue mb-2">0€</span>
+      <span class="text-lightgray">/mois</span>
+    </div>
+    <div class="bg-darkblue rounded-2xl p-8 flex flex-col items-center border border-yellow-400 border-2 shadow-lg">
+      <h3 class="text-2xl font-bold text-yellow-300 mb-4">Premium</h3>
+      <p class="text-lg mb-6 text-lightgray text-center">Pour les grandes copropriétés ou des besoins illimités.</p>
+      <ul class="mb-8 space-y-3 text-lightgray">
+        <li>👥 <span class="font-semibold text-yellow-300">Copropriétaires illimités</span></li>
+        <li>🛠️ <span class="font-semibold text-yellow-300">Travaux illimités</span></li>
+        <li>💶 <span class="font-semibold text-yellow-300">Provisions de charges illimitées</span></li>
+      </ul>
+      <span class="text-3xl font-extrabold text-yellow-300 mb-2">9€</span>
+      <span class="text-lightgray">/mois</span>
+    </div>
+  </div>
+</div>
+{{end}}
