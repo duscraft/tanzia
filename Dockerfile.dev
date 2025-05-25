@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 RUN apk add gcc musl-dev
-RUN CGO_ENABLED=1 go build -o /app/tantieme .
+RUN CGO_ENABLED=1 go build -o /app/tanzia .
 
 FROM golang:alpine
 
@@ -15,6 +15,6 @@ RUN go install github.com/air-verse/air@latest
 
 WORKDIR /app
 
-COPY --from=builder /app/tantieme /app/tantieme
+COPY --from=builder /app/tanzia /app/tanzia
 
 CMD ["air", "-c", "/app/air.toml"]

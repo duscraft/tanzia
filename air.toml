@@ -1,6 +1,6 @@
 [build]
-cmd = "go build -o ./tantieme ."
-bin = "./tantieme"
+cmd = "go build -o ./tanzia ."
+bin = "./tanzia"
 include_ext = ["go", "tpl", "tmpl", "html"]
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]
 root = "/app"

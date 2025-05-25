@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tantieme - Tableau de bord</title>
+    <title>Tanzia - Tableau de bord</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -47,7 +47,7 @@
       <a
         href="/dashboard"
         class="text-3xl font-extrabold text-accentblue tracking-tight hover:text-accentlighter"
-        >Tantieme</a
+        >Tanzia</a
       >
         </div>
       <div class="flex gap-5">
@@ -103,7 +103,7 @@
                 <td
                   class="border border-blue p-3 text-accentlighter font-semibold"
                 >
-                  {{printf "%.2f" ($person.CalculateProvision $.TotalTantiemes
+                  {{printf "%.2f" ($person.CalculateProvision $.TotalTanzias
                   $provision)}} €
                 </td>
                 {{end}}
@@ -160,7 +160,7 @@
                 <td
                   class="border border-blue p-3 text-accentlighter font-semibold"
                 >
-                  {{printf "%.2f" ($person.CalculateDue $.TotalTantiemes
+                  {{printf "%.2f" ($person.CalculateDue $.TotalTanzias
                   $bill)}} €
                 </td>
                 {{end}}
@@ -173,7 +173,7 @@
                 <td class="border border-blue p-3">Solde restant</td>
                 {{range $person := .Persons}}
                 <td class="border border-blue p-3">
-                  {{printf "%.2f" ($person.CalculateLeft $.TotalTantiemes $.Bills
+                  {{printf "%.2f" ($person.CalculateLeft $.TotalTanzias $.Bills
                   $.Provisions)}} €
                 </td>
                 {{end}}
@@ -278,7 +278,7 @@
           class="flex flex-col justify-end items-end text-right text-sm font-light"
         >
           <p class="mb-1 text-accentlighter font-semibold text-lg select-none">
-            Tantieme © 2025
+            Tanzia © 2025
           </p>
           <p>Simplifiez la gestion de votre copropriété.</p>
         </div>

@@ -1,4 +1,4 @@
-module tantieme
+module tanzia
 
 go 1.23
 

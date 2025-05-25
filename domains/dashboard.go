@@ -3,14 +3,14 @@ package domains
 import (
 	"html/template"
 	"net/http"
-	"tantieme/helpers"
+	"tanzia/helpers"
 )
 
 type DashboardData struct {
 	Persons        []Person
 	Bills          []Bill
 	Provisions     []Provision
-	TotalTantiemes int
+	TotalTanzias int
 	Balance        float64
 }
 
@@ -20,7 +20,7 @@ func getDashboardData(userId string) DashboardData {
 		panic(err)
 	}
 
-	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = $1", userId)
+	personRows, _ := db.Query("SELECT name, tanzia FROM persons WHERE userId = $1", userId)
 	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userId)
 	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userId)
 
@@ -28,16 +28,16 @@ func getDashboardData(userId string) DashboardData {
 	var Bills []Bill
 	var Provisions []Provision
 	var Balance float64
-	TotalTantiemes := 0
+	TotalTanzias := 0
 
 	for personRows.Next() {
 		var person Person
-		err := personRows.Scan(&person.Name, &person.Tantieme)
+		err := personRows.Scan(&person.Name, &person.Tanzia)
 		if err != nil {
 			panic(err)
 		}
 		Persons = append(Persons, person)
-		TotalTantiemes += person.Tantieme
+		TotalTanzias += person.Tanzia
 	}
 
 	for billRows.Next() {
@@ -64,7 +64,7 @@ func getDashboardData(userId string) DashboardData {
 		Persons,
 		Bills,
 		Provisions,
-		TotalTantiemes,
+		TotalTanzias,
 		Balance,
 	}
 }

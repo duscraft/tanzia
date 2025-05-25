@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
-	"tantieme/helpers"
+	"tanzia/helpers"
 
 	"github.com/go-session/session/v3"
 	"github.com/google/uuid"
@@ -52,7 +52,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Could not save session to redis")
 	}
 
-	http.SetCookie(w, &http.Cookie{Name: "tantieme-session", Value: cookie.String(), MaxAge: 86_400, HttpOnly: true})
+	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: cookie.String(), MaxAge: 86_400, HttpOnly: true})
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
 
@@ -69,7 +69,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Could not save session to redis")
 	}
 
-	http.SetCookie(w, &http.Cookie{Name: "tantieme-session", Value: "", MaxAge: -1, HttpOnly: true})
+	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: "", MaxAge: -1, HttpOnly: true})
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
 
@@ -79,7 +79,7 @@ func GetAuthenticatedUserId(w http.ResponseWriter, r *http.Request) (string, boo
 		log.Fatal("Could not connect to redis")
 	}
 
-	cookie, err := r.Cookie("tantieme-session")
+	cookie, err := r.Cookie("tanzia-session")
 	if err != nil {
 		return "", false
 	}

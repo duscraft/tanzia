@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"tantieme/domains"
-	"tantieme/helpers"
+	"tanzia/domains"
+	"tanzia/helpers"
 
 	"github.com/go-session/redis/v3"
 	"github.com/go-session/session/v3"

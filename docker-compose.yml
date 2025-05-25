@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  tantieme-app:
+  tanzia-app:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: tantieme-app
+    container_name: tanzia-app
     ports:
       - "8080:8080"
     environment:
@@ -15,7 +15,7 @@ services:
       - PG_PORT=5432
       - PG_USERNAME=postgres
       - PG_PASSWORD=password
-      - PG_DBNAME=tantieme
+      - PG_DBNAME=tanzia
     volumes:
       - ./:/app
     working_dir: /app
@@ -35,7 +35,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: tantieme
+      POSTGRES_DB: tanzia
     ports:
       - "5432:5432"
     volumes:

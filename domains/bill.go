@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"tantieme/helpers"
+	"tanzia/helpers"
 )
 
 type Bill struct {
