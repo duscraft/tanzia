@@ -13,13 +13,14 @@ import (
 	"github.com/go-session/session/v3"
 )
 
-func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/404.html", "templates/base-layout.html")
 	w.WriteHeader(http.StatusNotFound)
 	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "website")
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +34,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "website")
 }
 
 func cgvHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +43,7 @@ func cgvHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "website")
 }
 
 func legalsHandler(w http.ResponseWriter, r *http.Request) {
@@ -49,6 +52,7 @@ func legalsHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "website")
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,6 +61,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "app")
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +70,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	domains.LogUserConnection(w, r, "app")
 }
 
 func main() {
