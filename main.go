@@ -106,6 +106,7 @@ func main() {
 	http.HandleFunc("POST /signup", domains.SignupHandler)
 	http.HandleFunc("GET /cgv", cgvHandler)
 	http.HandleFunc("GET /legals", legalsHandler)
+	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	http.HandleFunc("GET /", indexHandler)
 
 	port := os.Getenv("PORT")
