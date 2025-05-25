@@ -10,6 +10,6 @@ go.work.sum
 .env
 .idea
 *.db
-tantieme
+tanzia
 vendor
 tmp
