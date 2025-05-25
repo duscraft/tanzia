@@ -56,13 +56,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the docker image
-        run: docker build . --file Dockerfile --tag tantieme
+        run: docker build . --file Dockerfile --tag tanzia
       - name: Login to registry
         run:  docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.PAT_TOKEN }}
       - name: Push the docker image
         run: |
-          docker tag tantieme ghcr.io/${{ github.repository_owner }}/tantieme:latest
-          docker push ghcr.io/${{ github.repository_owner }}/tantieme:latest
+          docker tag tanzia ghcr.io/${{ github.repository_owner }}/tanzia:latest
+          docker push ghcr.io/${{ github.repository_owner }}/tanzia:latest
 
   rollout:
     name: rollout
@@ -71,4 +71,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: ssh into the vps to kubectl rollout restart
-        run: sshpass -p "${{ secrets.VPS_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_SSH_IP }} -p ${{ secrets.VPS_SSH_PORT }} 'sudo kubectl rollout restart deployment tantieme-app'
+        run: sshpass -p "${{ secrets.VPS_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_SSH_IP }} -p ${{ secrets.VPS_SSH_PORT }} 'sudo kubectl rollout restart deployment tanzia-app'
