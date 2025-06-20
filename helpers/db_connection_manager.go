@@ -43,7 +43,7 @@ func (connManager *ConnectionManager) GetConnection(driver string) (*sql.DB, err
 }
 
 func (connManager *ConnectionManager) AddConnection(driver string) (*sql.DB, error) {
-	db, err := sql.Open(driver, getUrl(driver))
+	db, err := sql.Open(driver, getURL(driver))
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
@@ -73,7 +73,7 @@ func (connManager *ConnectionManager) CloseConnection() error {
 	return nil
 }
 
-func getUrl(driver string) string {
+func getURL(driver string) string {
 	if driver == "postgres" {
 		hostname := os.Getenv("PG_HOSTNAME")
 		port := os.Getenv("PG_PORT")
@@ -89,7 +89,7 @@ func getUrl(driver string) string {
 func createTables(db *sql.DB) error {
 	queries := []string{
 		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT, password TEXT)",
-		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tanzia INTEGER, userId INTEGER REFERENCES users(id))",
+		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
 	}

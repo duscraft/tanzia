@@ -27,7 +27,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var userId string
+	var userID string
 	result, err := db.Query("SELECT id FROM users WHERE email = $1 AND password = $2", email, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -38,14 +38,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = result.Scan(&userId)
+	err = result.Scan(&userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	cookie := uuid.New()
-	store.Set(cookie.String(), userId)
+	store.Set(cookie.String(), userID)
 
 	err = store.Save()
 	if err != nil {
@@ -73,7 +73,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
 
-func GetAuthenticatedUserId(w http.ResponseWriter, r *http.Request) (string, bool) {
+func GetAuthenticatedUserID(w http.ResponseWriter, r *http.Request) (string, bool) {
 	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
 		log.Fatal("Could not connect to redis")
@@ -119,7 +119,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO users (email, name, password) VALUES ($1, $2, $3)", email, name, password)
+	_, err = db.Exec("INSERT INTO users (email, name, password, is_premium) VALUES ($1, $2, $3, $4)", email, name, password, false)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
