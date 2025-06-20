@@ -32,7 +32,7 @@ func CanUserCreateProvision(db *sql.DB, userID string) (bool, error) {
 		return true, nil
 	}
 	var count int
-	query := "SELECT COUNT(*) FROM provisions WHERE user_id = $1"
+	query := "SELECT COUNT(*) FROM provisions WHERE userId = $1"
 	err := db.QueryRow(query, userID).Scan(&count)
 	if err != nil {
 		return false, fmt.Errorf("error checking provision count: %w", err)
@@ -47,7 +47,7 @@ func CanUserCreateBill(db *sql.DB, userID string) (bool, error) {
 		return true, nil
 	}
 	var count int
-	query := "SELECT COUNT(*) FROM bills WHERE user_id = $1"
+	query := "SELECT COUNT(*) FROM bills WHERE userId = $1"
 	err := db.QueryRow(query, userID).Scan(&count)
 	if err != nil {
 		return false, fmt.Errorf("error checking bill count: %w", err)
@@ -62,7 +62,7 @@ func CanUserCreatePerson(db *sql.DB, userID string) (bool, error) {
 		return true, nil
 	}
 	var count int
-	query := "SELECT COUNT(*) FROM person WHERE user_id = $1"
+	query := "SELECT COUNT(*) FROM persons WHERE userId = $1"
 	err := db.QueryRow(query, userID).Scan(&count)
 	if err != nil {
 		return false, fmt.Errorf("error checking person count: %w", err)

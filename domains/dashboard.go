@@ -70,14 +70,14 @@ func getDashboardData(userID string) DashboardData {
 }
 
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
-	userId, ok := GetAuthenticatedUserID(w, r)
+	userID, ok := GetAuthenticatedUserID(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	data := getDashboardData(userId)
+	data := getDashboardData(userID)
 
 	t, _ := template.ParseFiles("templates/dashboard.html")
 	err := t.Execute(w, data)
