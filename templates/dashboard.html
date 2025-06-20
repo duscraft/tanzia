@@ -103,7 +103,7 @@
                 <td
                   class="border border-blue p-3 text-accentlighter font-semibold"
                 >
-                  {{printf "%.2f" ($person.CalculateProvision $.TotalTanzias
+                  {{printf "%.2f" ($person.CalculateProvision $.TotalTantiemes
                   $provision)}} €
                 </td>
                 {{end}}
@@ -160,7 +160,7 @@
                 <td
                   class="border border-blue p-3 text-accentlighter font-semibold"
                 >
-                  {{printf "%.2f" ($person.CalculateDue $.TotalTanzias
+                  {{printf "%.2f" ($person.CalculateDue $.TotalTantiemes
                   $bill)}} €
                 </td>
                 {{end}}
@@ -173,7 +173,7 @@
                 <td class="border border-blue p-3">Solde restant</td>
                 {{range $person := .Persons}}
                 <td class="border border-blue p-3">
-                  {{printf "%.2f" ($person.CalculateLeft $.TotalTanzias $.Bills
+                  {{printf "%.2f" ($person.CalculateLeft $.TotalTantiemes $.Bills
                   $.Provisions)}} €
                 </td>
                 {{end}}

@@ -10,34 +10,34 @@ type DashboardData struct {
 	Persons        []Person
 	Bills          []Bill
 	Provisions     []Provision
-	TotalTanzias int
+	TotalTantiemes int
 	Balance        float64
 }
 
-func getDashboardData(userId string) DashboardData {
+func getDashboardData(userID string) DashboardData {
 	db, err := helpers.GetConnectionManager().GetConnection("postgres")
 	if err != nil {
 		panic(err)
 	}
 
-	personRows, _ := db.Query("SELECT name, tanzia FROM persons WHERE userId = $1", userId)
-	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userId)
-	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userId)
+	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = $1", userID)
+	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userID)
+	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userID)
 
 	var Persons []Person
 	var Bills []Bill
 	var Provisions []Provision
 	var Balance float64
-	TotalTanzias := 0
+	TotalTantiemes := 0
 
 	for personRows.Next() {
 		var person Person
-		err := personRows.Scan(&person.Name, &person.Tanzia)
+		err := personRows.Scan(&person.Name, &person.Tantieme)
 		if err != nil {
 			panic(err)
 		}
 		Persons = append(Persons, person)
-		TotalTanzias += person.Tanzia
+		TotalTantiemes += person.Tantieme
 	}
 
 	for billRows.Next() {
@@ -64,13 +64,13 @@ func getDashboardData(userId string) DashboardData {
 		Persons,
 		Bills,
 		Provisions,
-		TotalTanzias,
+		TotalTantiemes,
 		Balance,
 	}
 }
 
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
-	userId, ok := GetAuthenticatedUserId(w, r)
+	userId, ok := GetAuthenticatedUserID(w, r)
 
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)

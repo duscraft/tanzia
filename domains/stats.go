@@ -2,6 +2,7 @@ package domains
 
 import (
 	"log"
+	"maps"
 	"net"
 	"net/http"
 	"os"
@@ -39,9 +40,7 @@ func GetUserConnections() map[string]int {
 	statsMu.Lock()
 	defer statsMu.Unlock()
 	cpy := make(map[string]int)
-	for k, v := range userConnections {
-		cpy[k] = v
-	}
+	maps.Copy(cpy, userConnections)
 	return cpy
 }
 
