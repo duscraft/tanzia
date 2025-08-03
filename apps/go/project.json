@@ -34,6 +34,22 @@
         "command": "golangci-lint run ./...",
         "cwd": "apps/go"
       }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "echo TODO",
+        "cwd": "apps/go"
+      }
+    },
+    "rollout": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "echo TODO",
+        "cwd": "apps/go"
+      }
     }
   }
 }

@@ -84,6 +84,22 @@
         "staticFilePath": "dist/apps/front/browser",
         "spa": true
       }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "echo TODO",
+        "cwd": "apps/front"
+      }
+    },
+    "rollout": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "echo TODO",
+        "cwd": "apps/front"
+      }
     }
   }
 }

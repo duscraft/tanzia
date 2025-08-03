@@ -3,7 +3,9 @@
     "start": "nx run-many -t start",
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
-    "test": "nx run-many -t test"
+    "test": "nx run-many -t test",
+    "deploy": "nx run-many -t deploy",
+    "rollout": "nx run-many -t rollout"
   },
   "devDependencies": {
     "@angular-devkit/core": "~20.1.0",
