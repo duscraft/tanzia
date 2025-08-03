@@ -26,3 +26,5 @@ tmp
 .next
 out
 node_modules/
+
+.angular
