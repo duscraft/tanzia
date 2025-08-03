@@ -1,27 +1,27 @@
 {
   "name": "front",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "front/src",
+  "sourceRoot": "apps/front/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/front",
-        "browser": "front/src/main.ts",
+        "outputPath": "dist/apps/front",
+        "browser": "apps/front/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "front/tsconfig.app.json",
+        "tsConfig": "apps/front/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "front/public"
+            "input": "apps/front/public"
           }
         ],
-        "styles": ["front/src/styles.scss"]
+        "styles": ["apps/front/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -73,7 +73,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "front/jest.config.ts"
+        "jestConfig": "apps/front/jest.config.ts"
       }
     },
     "serve-static": {
@@ -81,7 +81,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "front:build",
-        "staticFilePath": "dist/front/browser",
+        "staticFilePath": "dist/apps/front/browser",
         "spa": true
       }
     }
