@@ -4,6 +4,7 @@
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "projects": {
+    "front": "apps/front",
     "go": "apps/go"
   },
   "targetDefaults": {
