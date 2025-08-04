@@ -86,6 +86,7 @@ jobs:
         with:
           name: dist
           path: dist
+        continue-on-error: true
       - name: Install deps
         run: npm ci
       - uses: nrwl/nx-set-shas@v4
