@@ -7,6 +7,6 @@ RUN go mod download
 
 COPY apps/go/ .
 RUN apk add gcc musl-dev
-RUN CGO_ENABLED=1 go build -o tanzia ./apps/go/...
+RUN CGO_ENABLED=1 go build -o tanzia ./apps/go/.
 
 CMD ["./tanzia"]
