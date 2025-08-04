@@ -22,14 +22,14 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "go test apps/go/...",
+        "command": "go test apps/go/main.go",
       }
     },
     "lint": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "bash scripts/lint.sh",
+        "command": "bash apps/go/scripts/lint.sh",
       }
     },
     "deploy": {
