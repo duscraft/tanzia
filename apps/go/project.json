@@ -15,14 +15,14 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "go build apps/go/main.go",
+        "command": "go build ./apps/go/...",
       }
     },
     "test": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "go test apps/go/main.go",
+        "command": "go test ./apps/go/...",
       }
     },
     "lint": {
