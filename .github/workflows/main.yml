@@ -102,4 +102,4 @@ jobs:
       - name: Install deps
         run: npm ci
       - name: Nx Affected Build
-        run: npx nx affected --target=deploy --base=remotes/origin/main
+        run: npx nx affected --target=rollout --base=remotes/origin/main
