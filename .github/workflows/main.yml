@@ -21,8 +21,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
       - name: Install deps
-        run: npm ci
+        run: npm ci && go mod download
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=remotes/origin/main
 
@@ -35,8 +38,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
       - name: Install deps
-        run: npm ci
+        run: npm ci && go mod download
       - name: Nx Affected Test
         run: npx nx affected --target=test --base=remotes/origin/main
 
@@ -49,8 +55,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
       - name: Install deps
-        run: npm ci
+        run: npm ci && go mod download
       - name: Nx Affected Build
         run: npx nx affected --target=build --base=remotes/origin/main
       - name: Upload js artifacts

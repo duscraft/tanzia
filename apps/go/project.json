@@ -15,40 +15,35 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "go build ./...",
-        "cwd": "apps/go"
+        "command": "go build apps/go/main.go",
       }
     },
     "test": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "go test ./...",
-        "cwd": "apps/go"
+        "command": "go test apps/go/...",
       }
     },
     "lint": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "golangci-lint run ./...",
-        "cwd": "apps/go"
+        "command": "bash scripts/lint.sh",
       }
     },
     "deploy": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "bash scripts/deploy.sh",
-        "cwd": "apps/go"
+        "command": "bash apps/go/scripts/deploy.sh",
       }
     },
     "rollout": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "bash scripts/rollout.sh",
-        "cwd": "apps/go"
+        "command": "bash apps/go/scripts/rollout.sh",
       }
     }
   }

@@ -13,6 +13,7 @@ go.work.sum
 tanzia
 vendor
 tmp
+bin/
 
 .nx/installation
 .nx/cache
