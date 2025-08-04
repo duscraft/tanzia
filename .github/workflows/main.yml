@@ -5,40 +5,14 @@ on:
     branches: [main]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Upload node_modules artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
-
   lint:
     runs-on: ubuntu-latest
     needs: prepare
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - uses: actions/setup-go@v5
-      - name: Download node_modules artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
+      - name: Install deps
+        run: npm ci
       - name: Nx Affected Lint
         run: npx nx affected --target=lint
 
@@ -48,12 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - uses: actions/setup-go@v5
-      - name: Download node_modules artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
+      - name: Install deps
+        run: npm ci
       - name: Nx Affected Test
         run: npx nx affected --target=test
 
@@ -63,12 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - uses: actions/setup-go@v5
-      - name: Download node_modules artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: node_modules
-          path: node_modules
+      - name: Install deps
+        run: npm ci
       - name: Nx Affected Build
         run: npx nx affected --target=build
       - name: Upload js artifacts
@@ -83,7 +49,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - uses: actions/setup-go@v5
       - name: Download js build artifact
         uses: actions/download-artifact@v4
         with:
