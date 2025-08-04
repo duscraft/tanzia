@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"tanzia/helpers"
+	"tanzia/apps/go/helpers"
 )
 
 type Person struct {

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
-	"tanzia/helpers"
+	"tanzia/apps/go/helpers"
 
 	"github.com/go-session/session/v3"
 	"github.com/google/uuid"

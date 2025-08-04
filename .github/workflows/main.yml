@@ -1,22 +1,92 @@
-name: PullRequests
+name: Main
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
+
+env:
+  DOCKER_USER: ${{ github.actor }}
+  PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+  REPO_OWNER: ${{ github.repository_owner }}
+  SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+  SSH_IP: ${{ secrets.VPS_SSH_IP }}
+  SSH_USER: ${{ secrets.VPS_SSH_USER }}
+  SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
 
 jobs:
-  deploy:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build the docker image
-        run: docker build . --file Dockerfile --tag tanzia
-      - name: Login to registry
-        run:  docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.PAT_TOKEN }}
-      - name: Push the docker image
-        run: |
-          docker tag tanzia ghcr.io/${{ github.repository_owner }}/tanzia:latest
-          docker push ghcr.io/${{ github.repository_owner }}/tanzia:latest
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Lint
+        run: npx nx affected --target=lint --base=remotes/origin/main
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Test
+        run: npx nx affected --target=test --base=remotes/origin/main
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Build
+        run: npx nx affected --target=build --base=remotes/origin/main
+      - name: Upload js artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, test, build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Download js build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Install deps
+        run: npm ci
+      - name: Nx Affected Build
+        run: npx nx affected --target=deploy --base=remotes/origin/main
 
   rollout:
     name: rollout
@@ -24,5 +94,12 @@ jobs:
     needs: [deploy]
     steps:
       - uses: actions/checkout@v4
-      - name: ssh into the vps to kubectl rollout restart
-        run: sshpass -p "${{ secrets.VPS_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_SSH_IP }} -p ${{ secrets.VPS_SSH_PORT }} 'sudo kubectl rollout restart deployment tanzia-app'
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install deps
+        run: npm ci
+      - name: Nx Affected Build
+        run: npx nx affected --target=rollout --base=remotes/origin/main

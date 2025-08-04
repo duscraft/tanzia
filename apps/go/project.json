@@ -1,0 +1,50 @@
+{
+  "name": "go",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "tags": [],
+  "targets": {
+    "start": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "docker compose up",
+        "cwd": "apps/go"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "go build ./apps/go/...",
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "go test ./apps/go/...",
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "bash apps/go/scripts/lint.sh",
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "bash apps/go/scripts/deploy.sh",
+      }
+    },
+    "rollout": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "bash apps/go/scripts/rollout.sh",
+      }
+    }
+  }
+}

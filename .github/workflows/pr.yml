@@ -1,45 +1,56 @@
-name: PullRequests
+name: Pull Requests
 
 on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-
-    - name: Build
-      run: go build -v ./...
-
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-
-    - name: Golangci-lint
-      uses: golangci/golangci-lint-action@v7.0.0
-
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Lint
+        run: npx nx affected --target=lint --base=remotes/origin/main
 
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Test
+        run: npx nx affected --target=test --base=remotes/origin/main
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-
-    - name: Test
-      run: go test -v ./...
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Install deps
+        run: npm ci && go mod download
+      - name: Nx Affected Build
+        run: npx nx affected --target=build --base=remotes/origin/main

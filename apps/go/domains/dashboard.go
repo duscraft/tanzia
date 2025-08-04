@@ -3,7 +3,7 @@ package domains
 import (
 	"html/template"
 	"net/http"
-	"tanzia/helpers"
+	"tanzia/apps/go/helpers"
 )
 
 type DashboardData struct {
