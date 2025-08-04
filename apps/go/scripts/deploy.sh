@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 docker build . --file Dockerfile --tag tanzia
 docker login ghcr.io -u $GITHUB_ACTOR -p $PAT_TOKEN
