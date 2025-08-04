@@ -39,7 +39,7 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "echo TODO",
+        "command": "bash scripts/deploy.sh",
         "cwd": "apps/go"
       }
     },
@@ -47,7 +47,7 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "echo TODO",
+        "command": "bash scripts/rollout.sh",
         "cwd": "apps/go"
       }
     }

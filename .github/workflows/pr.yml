@@ -11,6 +11,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Install deps
         run: npm ci
       - name: Nx Affected Lint
@@ -23,6 +25,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Install deps
         run: npm ci
       - name: Nx Affected Test
@@ -35,6 +39,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Install deps
         run: npm ci
       - name: Nx Affected Build

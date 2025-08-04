@@ -89,16 +89,14 @@
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "echo TODO",
-        "cwd": "apps/front"
+        "command": "bash apps/front/scripts/deploy.sh",
       }
     },
     "rollout": {
       "executor": "nx:run-commands",
       "outputs": [],
       "options": {
-        "command": "echo TODO",
-        "cwd": "apps/front"
+        "command": "bash apps/front/scripts/rollout.sh",
       }
     }
   }
