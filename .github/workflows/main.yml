@@ -26,8 +26,9 @@ jobs:
           go-version: 1.24
       - name: Install deps
         run: npm ci && go mod download
+      - uses: nrwl/nx-set-shas@v4
       - name: Nx Affected Lint
-        run: npx nx affected --target=lint --base=remotes/origin/main
+        run: npx nx affected --target=lint
 
   test:
     runs-on: ubuntu-latest
@@ -43,8 +44,9 @@ jobs:
           go-version: 1.24
       - name: Install deps
         run: npm ci && go mod download
+      - uses: nrwl/nx-set-shas@v4
       - name: Nx Affected Test
-        run: npx nx affected --target=test --base=remotes/origin/main
+        run: npx nx affected --target=test
 
   build:
     runs-on: ubuntu-latest
@@ -60,8 +62,9 @@ jobs:
           go-version: 1.24
       - name: Install deps
         run: npm ci && go mod download
+      - uses: nrwl/nx-set-shas@v4
       - name: Nx Affected Build
-        run: npx nx affected --target=build --base=remotes/origin/main
+        run: npx nx affected --target=build
       - name: Upload js artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -85,8 +88,9 @@ jobs:
           path: dist
       - name: Install deps
         run: npm ci
+      - uses: nrwl/nx-set-shas@v4
       - name: Nx Affected Build
-        run: npx nx affected --target=deploy --base=remotes/origin/main
+        run: npx nx affected --target=deploy
 
   rollout:
     name: rollout
@@ -101,5 +105,6 @@ jobs:
           node-version: 24
       - name: Install deps
         run: npm ci
+      - uses: nrwl/nx-set-shas@v4
       - name: Nx Affected Build
-        run: npx nx affected --target=rollout --base=remotes/origin/main
+        run: npx nx affected --target=rollout
