@@ -12,6 +12,7 @@ env:
   SSH_IP: ${{ secrets.VPS_SSH_IP }}
   SSH_USER: ${{ secrets.VPS_SSH_USER }}
   SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
+  SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
 
 jobs:
   lint:
