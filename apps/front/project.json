@@ -10,7 +10,7 @@
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/front",
+        "outputPath": "dist/front",
         "browser": "apps/front/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/front/tsconfig.app.json",
@@ -81,7 +81,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "front:build",
-        "staticFilePath": "dist/apps/front/browser",
+        "staticFilePath": "dist/front/browser",
         "spa": true
       }
     },
