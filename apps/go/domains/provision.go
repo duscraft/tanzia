@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"html/template"
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"tanzia/apps/go/helpers"
@@ -54,9 +54,7 @@ func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("apps/go/templates/edit-provisions.html")
-	err := t.Execute(w, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	// Example: return empty provisions list as JSON
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode([]Provision{})
 }

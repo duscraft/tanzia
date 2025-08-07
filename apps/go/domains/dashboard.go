@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"html/template"
+	"encoding/json"
 	"net/http"
 	"tanzia/apps/go/helpers"
 )
@@ -79,8 +79,8 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := getDashboardData(userID)
 
-	t, _ := template.ParseFiles("apps/go/templates/dashboard.html")
-	err := t.Execute(w, data)
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
