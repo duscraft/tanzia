@@ -79,7 +79,7 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := getDashboardData(userID)
 
-	t, _ := template.ParseFiles("templates/dashboard.html")
+	t, _ := template.ParseFiles("apps/go/templates/dashboard.html")
 	err := t.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
