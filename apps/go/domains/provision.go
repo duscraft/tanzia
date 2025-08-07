@@ -54,7 +54,7 @@ func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("templates/edit-provisions.html")
+	t, _ := template.ParseFiles("apps/go/templates/edit-provisions.html")
 	err := t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
