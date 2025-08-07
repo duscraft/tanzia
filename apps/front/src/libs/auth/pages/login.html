@@ -1,0 +1,14 @@
+<h1>Login to Tanzia</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label>
+    Email:
+    <input formControlName="email" type="email" />
+  </label>
+  <br />
+  <label>
+    Password:
+    <input formControlName="password" type="password" />
+  </label>
+  <br />
+  <button type="submit">Login</button>
+</form>
