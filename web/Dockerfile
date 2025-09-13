@@ -5,8 +5,8 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY web/ .
-COPY lib/ .
+COPY web ./
+COPY lib ./
 RUN apk add gcc musl-dev
 RUN CGO_ENABLED=1 go build -o tanzia-web ./web/.
 
