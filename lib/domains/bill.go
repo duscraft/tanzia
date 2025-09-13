@@ -55,7 +55,7 @@ func BillsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("apps/go/templates/edit-bills.html")
+	t, _ := template.ParseFiles("lib/templates/edit-bills.html")
 	err := t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

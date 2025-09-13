@@ -15,7 +15,7 @@ import (
 )
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("apps/go/templates/404.html", "apps/go/templates/base-layout.html")
+	t, _ := template.ParseFiles("web/templates/404.html", "web/templates/base-layout.html")
 	w.WriteHeader(http.StatusNotFound)
 	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
@@ -30,7 +30,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("apps/go/templates/index.html", "apps/go/templates/base-layout.html")
+	t, _ := template.ParseFiles("web/templates/index.html", "web/templates/base-layout.html")
 	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -39,7 +39,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func cgvHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("apps/go/templates/cgv.html", "apps/go/templates/base-layout.html")
+	t, _ := template.ParseFiles("web/templates/cgv.html", "web/templates/base-layout.html")
 	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -48,7 +48,7 @@ func cgvHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func legalsHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("apps/go/templates/legals.html", "apps/go/templates/base-layout.html")
+	t, _ := template.ParseFiles("web/templates/legals.html", "web/templates/base-layout.html")
 	err := t.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
