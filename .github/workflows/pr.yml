@@ -47,7 +47,7 @@ jobs:
       - name: Install deps
         run: go mod download
       - name: Go build
-        run: go build ./web
+        run: go build -o tanzia-web ./web
 
   build-api:
     runs-on: ubuntu-latest
@@ -61,4 +61,4 @@ jobs:
       - name: Install deps
         run: go mod download
       - name: Go build
-        run: go build ./api
+        run: go build -o tanzia-api ./api
