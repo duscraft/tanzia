@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY api api
+COPY api lib ./
 RUN apk add gcc musl-dev
 RUN CGO_ENABLED=1 go build -o tanzia-api ./api/.
 
