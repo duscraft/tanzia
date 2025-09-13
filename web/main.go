@@ -6,8 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"tanzia/apps/go/domains"
-	"tanzia/apps/go/helpers"
+
+	"github.com/duscraft/tanzia/lib/domains"
+	"github.com/duscraft/tanzia/lib/helpers"
 
 	"github.com/go-session/redis/v3"
 	"github.com/go-session/session/v3"
@@ -55,24 +56,6 @@ func legalsHandler(w http.ResponseWriter, r *http.Request) {
 	domains.LogUserConnection(w, r, "website")
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("apps/go/templates/login.html", "apps/go/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	domains.LogUserConnection(w, r, "app")
-}
-
-func signupHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("apps/go/templates/signup.html", "apps/go/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	domains.LogUserConnection(w, r, "app")
-}
-
 func main() {
 	redisUrl := os.Getenv("REDIS_URL")
 	if len(redisUrl) == 0 {
@@ -107,8 +90,6 @@ func main() {
 	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
 	http.HandleFunc("POST /login", domains.LoginHandler)
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
-	http.HandleFunc("GET /login", loginHandler)
-	http.HandleFunc("GET /signup", signupHandler)
 	http.HandleFunc("POST /signup", domains.SignupHandler)
 	http.HandleFunc("GET /cgv", cgvHandler)
 	http.HandleFunc("GET /legals", legalsHandler)

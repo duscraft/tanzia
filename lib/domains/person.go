@@ -1,10 +1,10 @@
 package domains
 
 import (
+	"github.com/duscraft/tanzia/lib/helpers"
 	"html/template"
 	"net/http"
 	"strconv"
-	"tanzia/apps/go/helpers"
 )
 
 type Person struct {

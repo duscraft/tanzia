@@ -1,9 +1,9 @@
 package domains
 
 import (
+	"github.com/duscraft/tanzia/lib/helpers"
 	"html/template"
 	"net/http"
-	"tanzia/apps/go/helpers"
 )
 
 type DashboardData struct {

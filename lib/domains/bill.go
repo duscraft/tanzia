@@ -4,15 +4,16 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"tanzia/apps/go/helpers"
+
+	"github.com/duscraft/tanzia/lib/helpers"
 )
 
-type Provision struct {
+type Bill struct {
 	Label  string
 	Amount float64
 }
 
-func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
+func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	userID, ok := GetAuthenticatedUserID(w, r)
 
 	if !ok {
@@ -26,27 +27,27 @@ func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	canUserCreateProvision, err := helpers.CanUserCreateProvision(db, userID)
+	canUserCreateBill, err := helpers.CanUserCreateBill(db, userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if !canUserCreateProvision {
-		http.Error(w, "Free tier does not allow adding more provision", http.StatusForbidden)
+	if !canUserCreateBill {
+		http.Error(w, "Free tier does not allow adding more bills", http.StatusForbidden)
 		return
 	}
 
 	amount, _ := strconv.ParseFloat(r.FormValue("amount"), 64)
-	_, err = db.Exec("INSERT INTO provisions (label, amount, userId) VALUES ($1, $2, $3)", r.FormValue("label"), amount, userID)
+	_, err = db.Exec("INSERT INTO bills (label, amount, userId) VALUES ($1, $2, $3)", r.FormValue("label"), amount, userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	http.Redirect(w, r, "/dashboard#provision_added", http.StatusFound)
+	http.Redirect(w, r, "/dashboard#bill_added", http.StatusFound)
 }
 
-func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
+func BillsHandler(w http.ResponseWriter, r *http.Request) {
 	_, ok := GetAuthenticatedUserID(w, r)
 
 	if !ok {
@@ -54,7 +55,7 @@ func ProvisionsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("apps/go/templates/edit-provisions.html")
+	t, _ := template.ParseFiles("apps/go/templates/edit-bills.html")
 	err := t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
