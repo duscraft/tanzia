@@ -38,6 +38,24 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	domains.LogUserConnection(w, r, "website")
 }
 
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("web/templates/login.html", "web/templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	domains.LogUserConnection(w, r, "app")
+}
+
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("web/templates/signup.html", "web/templates/base-layout.html")
+	err := t.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	domains.LogUserConnection(w, r, "app")
+}
+
 func cgvHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("web/templates/cgv.html", "web/templates/base-layout.html")
 	err := t.ExecuteTemplate(w, "base", nil)
@@ -88,6 +106,8 @@ func main() {
 	http.HandleFunc("GET /provisions", domains.ProvisionsHandler)
 	http.HandleFunc("POST /provisions", domains.AddProvisionHandler)
 	http.HandleFunc("GET /dashboard", domains.DashboardHandler)
+	http.HandleFunc("GET /login", loginHandler)
+	http.HandleFunc("GET /signup", signupHandler)
 	http.HandleFunc("POST /login", domains.LoginHandler)
 	http.HandleFunc("GET /logout", domains.LogoutHandler)
 	http.HandleFunc("POST /signup", domains.SignupHandler)
