@@ -1,0 +1,197 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/static/favicon.ico" />
+    <title>Tanzia - Votre gestion de copropriété simplifiée</title>
+    <meta name="description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
+    <meta name="keywords" content="tanzia, tantieme, calcul, export, copropriété, gestion, syndic, assemblée, immeuble, propriété, charges, plateforme, France" />
+    <meta name="author" content="Duscraft" />
+    <meta property="og:title" content="Tanzia - Votre gestion de copropriété simplifiée" />
+    <meta property="og:description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tanzia.fr/" />
+    <meta property="og:image" content="https://tanzia.fr/static/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tanzia - Votre gestion de copropriété simplifiée" />
+    <meta name="twitter:description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
+    <meta name="twitter:image" content="https://tanzia.fr/static/og-image.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              darkbg: "#10141a",
+              darkblue: "#1e293b",
+              lightgray: "#f4f5f7",
+              accentblue: "#3b82f6",
+              accentdarkblue: "#2563eb",
+              accentdarker: "#1e40af",
+              accentlighter: "#60a5fa",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: linear-gradient(160deg, #10141a 0%, #1e293b 100%);
+        color: #f4f5f7;
+      }
+      .cookie-banner {
+        background: #282f3a;
+        color: #f4f5f7;
+        border-top: 2px solid #334155;
+      }
+    </style>
+  </head>
+  <body
+    class="flex flex-col min-h-screen font-sans selection:bg-accentblue selection:text-white"
+  >
+    <!-- Header/Navbar -->
+    <nav
+      class="w-full px-6 sm:px-12 py-6 flex justify-between items-center bg-darkbg/95 backdrop-blur-sm sticky top-0 z-30 shadow-sm"
+    >
+      <a
+        href="/"
+        class="text-3xl font-extrabold text-accentblue tracking-tight hover:text-accentlighter"
+        >Tanzia</a
+      >
+      <div class="flex gap-5 items-center">
+        <a
+          href="/signup"
+          class="bg-accentblue invisible md:visible hover:bg-accentdarker text-white px-6 py-2 font-semibold rounded-lg shadow-md transition"
+          >Créer un compte</a
+        >
+        <a
+          href="/dashboard"
+          class="text-lightgray hover:text-accentlighter font-semibold transition"
+          >Connexion</a
+        >
+      </div>
+    </nav>
+    
+      {{template "content" .}}
+
+    <!-- Footer -->
+    <footer class="bg-darkblue text-lightgray py-12 px-6 sm:px-12">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div>
+          <h3
+            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
+          >
+            Produit
+          </h3>
+          <ul class="space-y-3 text-base font-medium">
+            <li>
+              <a href="/dashboard" class="hover:text-accentlighter transition"
+                >Tableau de bord</a
+              >
+            </li>
+            <li>
+              <a href="/signup" class="hover:text-accentlighter transition"
+                >Créer un compte</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3
+            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
+          >
+            À propos
+          </h3>
+          <ul class="space-y-3 text-base font-medium">
+            <li>
+              <a
+                href="https://github.com/alaborderie"
+                target="_blank"
+                rel="noopener"
+                class="hover:text-accentlighter transition"
+                >GitHub</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/antoine-laborderie/"
+                target="_blank"
+                rel="noopener"
+                class="hover:text-accentlighter transition"
+                >LinkedIn</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3
+            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
+          >
+            Ressources
+          </h3>
+          <ul class="space-y-3 text-base font-medium">
+            <li>
+              <a href="/cgv" class="hover:text-accentlighter transition">CGV</a>
+            </li>
+            <li>
+              <a href="/legals" class="hover:text-accentlighter transition"
+                >Mentions légales</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div
+          class="flex flex-col justify-start items-start md:items-end text-right text-sm font-light"
+        >
+          <p class="mb-1 text-accentlighter font-semibold text-lg select-none">
+            Tanzia © 2025
+          </p>
+          <p>Simplifiez la gestion de votre copropriété.</p>
+        </div>
+        <div
+          class="col-span-full flex flex-col justify-start items-start md:justify-end md:items-end text-right text-sm font-light"
+        >
+          <p>Développé par Duscraft</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Cookie Banner -->
+    <div
+      id="cookie-banner"
+      class="cookie-banner fixed bottom-0 left-0 w-full p-4 flex flex-col sm:flex-row items-center justify-between gap-3 z-50 hidden"
+    >
+      <p class="text-sm sm:text-base max-w-xl">
+        Ce site n’utilise
+        <strong
+          >aucun cookie autre que les cookies de session nécessaires</strong
+        >
+        au bon fonctionnement de l’application. Aucun suivi publicitaire.
+      </p>
+      <button
+        id="cookie-close"
+        class="bg-accentblue hover:bg-accentdarker text-white px-5 py-2 rounded-lg font-semibold transition shadow-sm select-none"
+      >
+        J’ai compris
+      </button>
+    </div>
+
+    <script>
+      // Cookie banner logic: show only once per user, closing stores flag in localStorage
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.getElementById("cookie-banner");
+        const closeBtn = document.getElementById("cookie-close");
+        if (!localStorage.getItem("cookieBannerClosed")) {
+          banner.classList.remove("hidden");
+        }
+        closeBtn.addEventListener("click", () => {
+          banner.classList.add("hidden");
+          localStorage.setItem("cookieBannerClosed", "true");
+        });
+      });
+    </script>
+  </body>
+</html>
+{{end}}

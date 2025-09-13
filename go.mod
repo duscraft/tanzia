@@ -1,6 +1,6 @@
-module tanzia
+module github.com/duscraft/tanzia
 
-go 1.23
+go 1.25.1
 
 require (
 	github.com/go-session/redis/v3 v3.2.1
