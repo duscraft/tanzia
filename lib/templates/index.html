@@ -1,83 +1,136 @@
 {{define "content"}}
-<!-- Main Content -->
-<main
-  class="flex-grow flex flex-col items-center justify-center py-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
->
-  <h1
-    class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-accentblue drop-shadow-lg leading-tight"
-  >
-    La gestion des charges de copropriété <br class="hidden sm:block" />n’a
-    jamais été aussi simple.
-  </h1>
-  <p class="mt-8 text-lg md:text-2xl text-lightgray font-medium max-w-3xl">
-    Tanzia révolutionne le suivi des charges et des provisions,
-    spécialement pensé pour les
-    <span class="text-accentlighter font-bold">syndicats bénévoles</span> et
-    les
-    <span class="text-accentlighter font-bold">petits professionnels</span
-    >.<br />
-    Générez automatiquement vos tableaux de répartition, calculez les soldes
-    et exportez vos comptes en toute simplicité, clairs et sans erreurs.
-  </p>
-  <div class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
-    <a
-      href="/signup"
-      class="bg-accentblue hover:bg-accentdarker text-white text-lg px-10 py-3 rounded-lg font-semibold shadow-lg transition"
-      >Essayez gratuitement</a
-    >
+<main class="flex-grow flex flex-col items-center justify-center py-24 px-6 sm:px-12 text-center max-w-7xl mx-auto">
+  <div class="relative z-10 animate-fade-in">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-8 border border-primary/20">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+      </span>
+      Nouveau : Export Excel disponible
+    </div>
+
+    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-textMain tracking-tight leading-tight mb-8">
+      La gestion de copropriété <br class="hidden sm:block" />
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover">réinventée.</span>
+    </h1>
+    
+    <p class="mt-4 text-xl text-textMuted font-medium max-w-2xl mx-auto leading-relaxed">
+      La plateforme moderne conçue pour les <span class="text-primary font-semibold">syndics bénévoles</span>. 
+      Générez vos appels de fonds et suivez vos travaux en quelques clics.
+    </p>
+
+    <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/signup" class="bg-primary hover:bg-primaryHover text-white text-lg px-8 py-4 rounded-xl font-bold shadow-xl shadow-primary/25 transition-all hover:scale-105 hover:shadow-primary/40">
+        Commencer gratuitement
+      </a>
+      <a href="#features" class="bg-surface hover:bg-surfaceHighlight text-textMain border border-border text-lg px-8 py-4 rounded-xl font-bold transition-all hover:scale-105">
+        En savoir plus
+      </a>
+    </div>
   </div>
-  <div
-    class="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 text-lg text-lightgray max-w-4xl"
-  >
-    <div class="flex items-center gap-2">
-      <span
-        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
-        >1</span
-      >
-      <p class="text-start">Ajoutez vos copropriétaires & tantièmes</p>
+
+  <div id="features" class="mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+    <div class="p-8 rounded-3xl bg-surface border border-border shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 group">
+      <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">1</span>
+      </div>
+      <h3 class="text-xl font-bold text-textMain mb-3">Copropriétaires</h3>
+      <p class="text-textMuted leading-relaxed">Ajoutez facilement vos lots et gérez la répartition des tantièmes en un instant.</p>
     </div>
-    <div class="flex items-center gap-2">
-      <span
-        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
-        >2</span
-      >
-      <p class="text-start">Indiquez les provisions et les travaux</p>
+
+    <div class="p-8 rounded-3xl bg-surface border border-border shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 group">
+      <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">2</span>
+      </div>
+      <h3 class="text-xl font-bold text-textMain mb-3">Travaux & Charges</h3>
+      <p class="text-textMuted leading-relaxed">Saisissez vos factures et laissez Tanzia calculer la quote-part de chacun automatiquement.</p>
     </div>
-    <div class="flex items-center gap-2">
-      <span
-        class="bg-accentdarker text-accentlighter rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold text-xl select-none mr-2"
-        >3</span
-      >
-      <p class="text-start">Obtenez vos tableaux de charges prêts à l’export</p>
+
+    <div class="p-8 rounded-3xl bg-surface border border-border shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 group">
+      <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">3</span>
+      </div>
+      <h3 class="text-xl font-bold text-textMain mb-3">Exports Clairs</h3>
+      <p class="text-textMuted leading-relaxed">Obtenez des tableaux récapitulatifs propres et professionnels, prêts à être envoyés.</p>
     </div>
   </div>
 </main>
 
-<div class="flex-1 flex flex-col items-center w-full py-24 bg-darkbg">
-  <h2 class="text-4xl font-extrabold text-accentlighter mb-10 text-center">Combien ça coûte ?</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl px-4">
-    <!-- Free Tier -->
-    <div class="bg-darkblue rounded-2xl p-8 flex flex-col items-center border border-blue-700">
-      <h3 class="text-2xl font-bold text-accentlighter mb-4">Gratuit</h3>
-      <p class="text-lg mb-6 text-lightgray text-center">Pour les petites copropriétés ou pour essayer Tanzia.</p>
-      <ul class="mb-8 space-y-3 text-lightgray">
-        <li>👥 Jusqu'à <span class="font-semibold text-accentblue">5 copropriétaires</span></li>
-        <li>🛠️ <span class="font-semibold text-accentblue">5 travaux</span> maximum</li>
-        <li>💶 <span class="font-semibold text-accentblue">10 provisions de charges</span> maximum</li>
-      </ul>
-      <span class="text-3xl font-extrabold text-accentblue mb-2">0€</span>
-      <span class="text-lightgray">/mois</span>
-    </div>
-    <div class="bg-darkblue rounded-2xl p-8 flex flex-col items-center border border-yellow-400 border-2 shadow-lg">
-      <h3 class="text-2xl font-bold text-yellow-300 mb-4">Premium</h3>
-      <p class="text-lg mb-6 text-lightgray text-center">Pour les grandes copropriétés ou des besoins illimités.</p>
-      <ul class="mb-8 space-y-3 text-lightgray">
-        <li>👥 <span class="font-semibold text-yellow-300">Copropriétaires illimités</span></li>
-        <li>🛠️ <span class="font-semibold text-yellow-300">Travaux illimités</span></li>
-        <li>💶 <span class="font-semibold text-yellow-300">Provisions de charges illimitées</span></li>
-      </ul>
-      <span class="text-3xl font-extrabold text-yellow-300 mb-2">9€</span>
-      <span class="text-lightgray">/mois</span>
+<div class="w-full py-32 bg-surfaceHighlight/30 border-t border-border">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <h2 class="text-4xl font-extrabold text-textMain mb-4">Une tarification simple</h2>
+    <p class="text-textMuted text-lg mb-16">Pas de frais cachés. Commencez gratuitement.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div class="bg-surface rounded-3xl p-10 flex flex-col items-center border border-border shadow-sm hover:shadow-xl transition-shadow relative overflow-hidden">
+        <div class="absolute top-0 w-full h-2 bg-gradient-to-r from-gray-200 to-gray-300"></div>
+        <h3 class="text-2xl font-bold text-textMain mb-2">Découverte</h3>
+        <div class="flex items-baseline gap-1 my-6">
+          <span class="text-5xl font-extrabold text-textMain tracking-tight">0€</span>
+          <span class="text-textMuted text-lg">/mois</span>
+        </div>
+        <p class="text-textMuted mb-8">Parfait pour tester l'outil.</p>
+        
+        <ul class="mb-10 space-y-4 text-left w-full">
+          <li class="flex items-center gap-3 text-textMain">
+            <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>Jusqu'à 5 copropriétaires</span>
+          </li>
+          <li class="flex items-center gap-3 text-textMain">
+            <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>5 travaux maximum</span>
+          </li>
+          <li class="flex items-center gap-3 text-textMain">
+            <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>10 provisions de charges</span>
+          </li>
+        </ul>
+        
+        <a href="/signup" class="w-full py-4 rounded-xl font-bold text-textMain bg-surfaceHighlight hover:bg-border transition-colors border border-border">
+          Commencer gratuitement
+        </a>
+      </div>
+
+      <div class="bg-surface rounded-3xl p-10 flex flex-col items-center border-2 border-primary shadow-xl relative overflow-hidden transform md:-translate-y-4">
+        <div class="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-xl">POPULAIRE</div>
+        <h3 class="text-2xl font-bold text-primary mb-2">Premium</h3>
+        <div class="flex items-baseline gap-1 my-6">
+          <span class="text-5xl font-extrabold text-textMain tracking-tight">9€</span>
+          <span class="text-textMuted text-lg">/mois</span>
+        </div>
+        <p class="text-textMuted mb-8">Pour une gestion complète et sereine.</p>
+        
+        <ul class="mb-10 space-y-4 text-left w-full">
+          <li class="flex items-center gap-3 text-textMain font-medium">
+            <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span>Copropriétaires illimités</span>
+          </li>
+          <li class="flex items-center gap-3 text-textMain font-medium">
+            <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span>Travaux illimités</span>
+          </li>
+          <li class="flex items-center gap-3 text-textMain font-medium">
+            <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span>Provisions illimitées</span>
+          </li>
+          <li class="flex items-center gap-3 text-textMain font-medium">
+            <div class="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg class="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span>Support prioritaire</span>
+          </li>
+        </ul>
+        
+        <a href="/signup" class="w-full py-4 rounded-xl font-bold text-white bg-primary hover:bg-primaryHover transition-colors shadow-lg shadow-primary/20">
+          Choisir le Premium
+        </a>
+      </div>
     </div>
   </div>
 </div>

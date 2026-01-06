@@ -1,10 +1,17 @@
 {{define "content"}}
-<main class="h-screen flex flex-col justify-center items-center font-sans selection:bg-accentblue selection:text-white px-4 text-center">
-  <h1 class="text-6xl font-extrabold text-accentblue mb-6 drop-shadow-lg select-none">Erreur 404</h1>
-  <p class="mb-8 text-lg text-lightgray max-w-md mx-auto">La page que vous recherchez n'existe pas ou a été déplacée. Merci de vérifier l'URL ou de revenir à l'accueil.</p>
-  <img src="https://http.cat/404" alt="404 Not Found" class="w-64 max-w-full rounded-lg shadow-lg mb-8" />
-  <a href="/" class="inline-block bg-accentblue hover:bg-accentdarker text-white py-3 px-8 rounded-lg font-semibold shadow-lg transition select-none">
-    Retour à l'accueil
-  </a>
+<main class="min-h-[calc(100vh-16rem)] flex flex-col justify-center items-center font-sans selection:bg-primary selection:text-white px-4 text-center">
+  <div class="relative">
+    <h1 class="text-9xl font-extrabold text-primary/10 select-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-150 blur-sm">404</h1>
+    <h1 class="relative text-6xl font-extrabold text-primary mb-6 drop-shadow-sm select-none z-10">Oups !</h1>
+  </div>
+  
+  <p class="mb-8 text-xl text-textMuted max-w-md mx-auto relative z-10">La page que vous recherchez semble avoir déménagé sans laisser d'adresse.</p>
+  
+  <div class="relative z-10">
+    <a href="/" class="inline-flex items-center gap-2 bg-primary hover:bg-primaryHover text-white py-3.5 px-8 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-primary/40">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      Retour à l'accueil
+    </a>
+  </div>
 </main>
 {{end}}

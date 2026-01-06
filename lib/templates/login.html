@@ -1,61 +1,47 @@
 {{define "content"}}
-    <main
-      class="flex-grow flex flex-col items-center justify-center pb-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
-    >
-      <div
-        class="max-w-md w-full p-8 bg-[#232e3f] rounded-3xl shadow-xl border border-blue-800"
-      >
-        <h2 class="text-3xl font-extrabold text-accentlighter mb-8 text-center">
-          Connexion à Tanzia
-        </h2>
-        <div id="login-error" class="hidden text-red-400 text-center mb-4 font-semibold">
-          E-mail ou mot de passe incorrect.
-        </div>
-        <form action="/login" method="POST" class="space-y-6">
-          <div>
-            <label for="email" class="block mb-2 text-lightgray font-semibold"
-              >E-mail</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-              placeholder="Votre e-mail"
-            />
-          </div>
-          <div>
-            <label for="password" class="block mb-2 text-lightgray font-semibold"
-              >Mot de passe</label
-            >
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-              placeholder="Votre mot de passe"
-            />
-          </div>
-          <button
-            type="submit"
-            class="w-full bg-accentlighter hover:bg-accentdarker text-white py-3 rounded-lg font-bold shadow-lg transition"
-          >
-            Se connecter
-          </button>
-          <a
-            href="/signup"
-            class="w-full inline-block text-center hover:bg-accentdarker text-white p-3 rounded-lg font-bold transition"
-          >
-            Pas encore de compte ?
-          </a>
-        </form>
+<main class="flex-grow flex flex-col items-center justify-center py-20 px-6 sm:px-12 text-center max-w-7xl mx-auto">
+  <div class="w-full max-w-md bg-surface p-8 sm:p-10 rounded-3xl shadow-xl border border-border">
+    <div class="mb-8">
+      <h2 class="text-3xl font-extrabold text-textMain tracking-tight mb-2">Bon retour</h2>
+      <p class="text-textMuted">Connectez-vous à votre espace Tanzia</p>
+    </div>
+    
+    <div id="login-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm font-medium mb-6 text-center animate-pulse">
+      E-mail ou mot de passe incorrect.
+    </div>
+    
+    <form action="/login" method="POST" class="space-y-5">
+      <div class="text-left">
+        <label for="email" class="block mb-2 text-sm font-semibold text-textMain">E-mail</label>
+        <input type="email" id="email" name="email" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="votre@email.com" />
       </div>
-    </main>
-    <script>
-      if (window.location.hash === "#unauthorized") {
-        document.getElementById("login-error").classList.remove("hidden");
-      }
-    </script>
+      <div class="text-left">
+        <div class="flex justify-between items-center mb-2">
+          <label for="password" class="block text-sm font-semibold text-textMain">Mot de passe</label>
+          <a href="#" class="text-xs font-medium text-primary hover:text-primaryHover transition-colors">Oublié ?</a>
+        </div>
+        <input type="password" id="password" name="password" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="••••••••" />
+      </div>
+      
+      <button type="submit"
+        class="w-full bg-primary hover:bg-primaryHover text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:shadow-primary/40 active:scale-[0.98]">
+        Se connecter
+      </button>
+      
+      <div class="pt-4 text-sm text-textMuted">
+        Pas encore de compte ? 
+        <a href="/signup" class="font-bold text-primary hover:text-primaryHover transition-colors">Créer un compte</a>
+      </div>
+    </form>
+  </div>
+</main>
+<script>
+  if (window.location.hash === "#unauthorized") {
+    document.getElementById("login-error").classList.remove("hidden");
+  }
+</script>
 {{end}}

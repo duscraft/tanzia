@@ -5,189 +5,227 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/static/favicon.ico" />
-    <title>Tanzia - Votre gestion de copropriété simplifiée</title>
+    <title>Tanzia - Gestion de copropriété simplifiée</title>
     <meta name="description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
-    <meta name="keywords" content="tanzia, tantieme, calcul, export, copropriété, gestion, syndic, assemblée, immeuble, propriété, charges, plateforme, France" />
-    <meta name="author" content="Duscraft" />
-    <meta property="og:title" content="Tanzia - Votre gestion de copropriété simplifiée" />
-    <meta property="og:description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tanzia.fr/" />
-    <meta property="og:image" content="https://tanzia.fr/static/og-image.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tanzia - Votre gestion de copropriété simplifiée" />
-    <meta name="twitter:description" content="Tanzia simplifie la gestion de votre copropriété. Plateforme moderne pour syndic bénévoles et copropriétaires." />
-    <meta name="twitter:image" content="https://tanzia.fr/static/og-image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
-            colors: {
-              darkbg: "#10141a",
-              darkblue: "#1e293b",
-              lightgray: "#f4f5f7",
-              accentblue: "#3b82f6",
-              accentdarkblue: "#2563eb",
-              accentdarker: "#1e40af",
-              accentlighter: "#60a5fa",
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
             },
+            colors: {
+              background: "var(--background)",
+              surface: "var(--surface)",
+              surfaceHighlight: "var(--surface-highlight)",
+              textMain: "var(--text-main)",
+              textMuted: "var(--text-muted)",
+              border: "var(--border)",
+              primary: "var(--primary)",
+              primaryHover: "var(--primary-hover)",
+              primaryLight: "var(--primary-light)",
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+            }
           },
         },
       };
     </script>
     <style>
-      body {
-        background: linear-gradient(160deg, #10141a 0%, #1e293b 100%);
-        color: #f4f5f7;
+      :root {
+        --background: #ffffff;
+        --surface: #ffffff;
+        --surface-highlight: #f3f4f6;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #eff6ff;
       }
-      .cookie-banner {
-        background: #282f3a;
-        color: #f4f5f7;
-        border-top: 2px solid #334155;
+
+      .dark {
+        --background: #020617;
+        --surface: #0f172a;
+        --surface-highlight: #1e293b;
+        --text-main: #f9fafb;
+        --text-muted: #94a3b8;
+        --border: #1e293b;
+        --primary: #3b82f6;
+        --primary-hover: #60a5fa;
+        --primary-light: #1e293b;
+      }
+
+      body, .surface, .border-color, .text-color {
+        transition-property: background-color, border-color, color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+      }
+      
+      .glass {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+      .dark .glass {
+        background: rgba(15, 23, 42, 0.8);
       }
     </style>
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
   </head>
-  <body
-    class="flex flex-col min-h-screen font-sans selection:bg-accentblue selection:text-white"
-  >
-    <!-- Header/Navbar -->
-    <nav
-      class="w-full px-6 sm:px-12 py-6 flex justify-between items-center bg-darkbg/95 backdrop-blur-sm sticky top-0 z-30 shadow-sm"
-    >
-      <a
-        href="/"
-        class="text-3xl font-extrabold text-accentblue tracking-tight hover:text-accentlighter"
-        >Tanzia</a
-      >
-      <div class="flex gap-5 items-center">
-        <a
-          href="/signup"
-          class="bg-accentblue invisible md:visible hover:bg-accentdarker text-white px-6 py-2 font-semibold rounded-lg shadow-md transition"
-          >Créer un compte</a
-        >
-        <a
-          href="/dashboard"
-          class="text-lightgray hover:text-accentlighter font-semibold transition"
-          >Connexion</a
-        >
+  <body class="flex flex-col min-h-screen font-sans bg-background text-textMain antialiased selection:bg-primary selection:text-white">
+    <nav class="w-full fixed top-0 z-40 border-b border-border glass transition-colors duration-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="/" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30 transition-transform group-hover:scale-105">T</div>
+              <span class="text-xl font-bold tracking-tight text-textMain group-hover:text-primary transition-colors">Tanzia</span>
+            </a>
+          </div>
+
+          <div class="hidden md:flex items-center gap-6">
+            <a href="/dashboard" class="text-sm font-medium text-textMuted hover:text-textMain transition-colors">Connexion</a>
+            <a href="/signup" class="text-sm font-medium bg-primary hover:bg-primaryHover text-white px-5 py-2.5 rounded-full shadow-lg shadow-primary/20 transition-all hover:shadow-primary/40 hover:-translate-y-0.5">
+              Commencer
+            </a>
+            
+            <button id="theme-toggle" class="p-2 rounded-full text-textMuted hover:bg-surfaceHighlight hover:text-textMain transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50" aria-label="Toggle theme">
+              <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+              <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+          </div>
+          
+          <div class="flex md:hidden items-center gap-4">
+             <button id="mobile-theme-toggle" class="p-2 rounded-full text-textMuted hover:bg-surfaceHighlight transition-colors" aria-label="Toggle theme mobile">
+                <svg id="mobile-theme-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+             </button>
+             <a href="/dashboard" class="text-sm font-medium text-textMuted">Connexion</a>
+          </div>
+        </div>
       </div>
     </nav>
     
-      {{template "content" .}}
+    <div class="h-16"></div>
 
-    <!-- Footer -->
-    <footer class="bg-darkblue text-lightgray py-12 px-6 sm:px-12">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+    {{template "content" .}}
+
+    <footer class="border-t border-border bg-surfaceHighlight/30 py-12 px-6 mt-auto">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div class="col-span-2 md:col-span-1">
+           <div class="flex items-center gap-2 mb-4">
+              <div class="w-6 h-6 rounded bg-primary flex items-center justify-center text-white text-xs font-bold">T</div>
+              <span class="font-bold text-textMain">Tanzia</span>
+           </div>
+           <p class="text-sm text-textMuted leading-relaxed">
+             La solution moderne pour les syndics bénévoles et les petites copropriétés.
+           </p>
+        </div>
+        
         <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            Produit
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a href="/dashboard" class="hover:text-accentlighter transition"
-                >Tableau de bord</a
-              >
-            </li>
-            <li>
-              <a href="/signup" class="hover:text-accentlighter transition"
-                >Créer un compte</a
-              >
-            </li>
+          <h4 class="font-semibold text-textMain mb-4">Produit</h4>
+          <ul class="space-y-2 text-sm text-textMuted">
+            <li><a href="/dashboard" class="hover:text-primary transition-colors">Tableau de bord</a></li>
+            <li><a href="/signup" class="hover:text-primary transition-colors">Créer un compte</a></li>
           </ul>
         </div>
+        
         <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            À propos
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a
-                href="https://github.com/alaborderie"
-                target="_blank"
-                rel="noopener"
-                class="hover:text-accentlighter transition"
-                >GitHub</a
-              >
-            </li>
-            <li>
-              <a
-                href="https://www.linkedin.com/in/antoine-laborderie/"
-                target="_blank"
-                rel="noopener"
-                class="hover:text-accentlighter transition"
-                >LinkedIn</a
-              >
-            </li>
+          <h4 class="font-semibold text-textMain mb-4">Légal</h4>
+          <ul class="space-y-2 text-sm text-textMuted">
+            <li><a href="/cgv" class="hover:text-primary transition-colors">CGV</a></li>
+            <li><a href="/legals" class="hover:text-primary transition-colors">Mentions légales</a></li>
           </ul>
         </div>
+        
         <div>
-          <h3
-            class="uppercase text-accentblue tracking-widest font-semibold mb-5"
-          >
-            Ressources
-          </h3>
-          <ul class="space-y-3 text-base font-medium">
-            <li>
-              <a href="/cgv" class="hover:text-accentlighter transition">CGV</a>
-            </li>
-            <li>
-              <a href="/legals" class="hover:text-accentlighter transition"
-                >Mentions légales</a
-              >
-            </li>
-          </ul>
+           <h4 class="font-semibold text-textMain mb-4">Contact</h4>
+           <ul class="space-y-2 text-sm text-textMuted">
+             <li><a href="https://github.com/alaborderie" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
+             <li><a href="https://www.linkedin.com/in/antoine-laborderie/" target="_blank" class="hover:text-primary transition-colors">LinkedIn</a></li>
+           </ul>
         </div>
-        <div
-          class="flex flex-col justify-start items-start md:items-end text-right text-sm font-light"
-        >
-          <p class="mb-1 text-accentlighter font-semibold text-lg select-none">
-            Tanzia © 2025
-          </p>
-          <p>Simplifiez la gestion de votre copropriété.</p>
-        </div>
-        <div
-          class="col-span-full flex flex-col justify-start items-start md:justify-end md:items-end text-right text-sm font-light"
-        >
-          <p>Développé par Duscraft</p>
-        </div>
+      </div>
+      <div class="max-w-7xl mx-auto pt-8 border-t border-border text-center md:text-left text-sm text-textMuted flex flex-col md:flex-row justify-between items-center">
+        <p>© 2025 Tanzia. Tous droits réservés.</p>
+        <p class="mt-2 md:mt-0">Fait avec ❤️ par Duscraft</p>
       </div>
     </footer>
 
-    <!-- Cookie Banner -->
-    <div
-      id="cookie-banner"
-      class="cookie-banner fixed bottom-0 left-0 w-full p-4 flex flex-col sm:flex-row items-center justify-between gap-3 z-50 hidden"
-    >
-      <p class="text-sm sm:text-base max-w-xl">
-        Ce site n’utilise
-        <strong
-          >aucun cookie autre que les cookies de session nécessaires</strong
-        >
-        au bon fonctionnement de l’application. Aucun suivi publicitaire.
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 p-6 rounded-2xl bg-surface border border-border shadow-2xl z-50 transform transition-all duration-300 translate-y-full opacity-0">
+      <h3 class="font-semibold text-textMain mb-2">Respect de votre vie privée</h3>
+      <p class="text-sm text-textMuted mb-4">
+        Ce site n'utilise que des cookies strictement nécessaires au fonctionnement. Aucun traceur publicitaire.
       </p>
-      <button
-        id="cookie-close"
-        class="bg-accentblue hover:bg-accentdarker text-white px-5 py-2 rounded-lg font-semibold transition shadow-sm select-none"
-      >
-        J’ai compris
-      </button>
+      <div class="flex justify-end">
+        <button id="cookie-close" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primaryHover transition-colors">
+          J'ai compris
+        </button>
+      </div>
     </div>
 
     <script>
-      // Cookie banner logic: show only once per user, closing stores flag in localStorage
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+      const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+      const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+      const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+
+      function updateIcons() {
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark) {
+          themeToggleDarkIcon.classList.add('hidden');
+          themeToggleLightIcon.classList.remove('hidden');
+          if(mobileThemeIcon) mobileThemeIcon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>';
+        } else {
+          themeToggleDarkIcon.classList.remove('hidden');
+          themeToggleLightIcon.classList.add('hidden');
+          if(mobileThemeIcon) mobileThemeIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
+        }
+      }
+
+      function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+        updateIcons();
+      }
+
+      themeToggleBtn.addEventListener('click', toggleTheme);
+      if(mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
+      
+      updateIcons();
+
       document.addEventListener("DOMContentLoaded", () => {
         const banner = document.getElementById("cookie-banner");
         const closeBtn = document.getElementById("cookie-close");
         if (!localStorage.getItem("cookieBannerClosed")) {
-          banner.classList.remove("hidden");
+          banner.classList.remove("translate-y-full", "opacity-0");
         }
         closeBtn.addEventListener("click", () => {
-          banner.classList.add("hidden");
+          banner.classList.add("translate-y-full", "opacity-0");
+          setTimeout(() => banner.remove(), 300);
           localStorage.setItem("cookieBannerClosed", "true");
         });
       });

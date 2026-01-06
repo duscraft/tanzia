@@ -1,29 +1,33 @@
 {{define "content"}}
-<!-- legals content -->
-<section class="max-w-3xl mx-auto bg-darkblue rounded-2xl p-8 my-12 text-lightgray shadow-lg">
-  <h1 class="text-3xl font-bold text-accentlighter mb-6 text-center">Mentions légales</h1>
-  <p class="mb-4">
-    <strong>Éditeur du site :</strong>
-    Antoine Laborderie, Entreprise Individuelle, SIREN 844240168
-  </p>
-  <p class="mb-4">
-    <strong>Adresse :</strong>
-    55 rue de la Peloue, 33127 Saint-Jean-d'Illac, France
-  </p>
-  <p class="mb-4">
-    <strong>Contact :</strong>
-    antoine.laborderie+tanzia_legals@gmail.com
-  </p>
-  <p class="mb-4">
-    <strong>Hébergement :</strong>
-    OVH, 2 rue Kellermann, 59100 Roubaix, France
-  </p>
-  <p class="mb-4">
-    <strong>Activité :</strong>
-    Vente d’accès à l’application de gestion de tantièmes et charges de copropriété.
-  </p>
-  <p class="mb-4 text-sm text-blue-400">
-    Dernière mise à jour : Mai 2025
-  </p>
+<section class="max-w-4xl mx-auto my-12 px-6">
+  <div class="bg-surface rounded-3xl p-8 sm:p-12 border border-border shadow-lg">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-textMain mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover">Mentions légales</h1>
+    
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="bg-surfaceHighlight/50 p-6 rounded-2xl border border-border">
+        <h3 class="font-bold text-textMain mb-2 text-lg">Éditeur du site</h3>
+        <p class="text-textMuted">Antoine Laborderie<br>Entreprise Individuelle<br>SIREN 844240168</p>
+      </div>
+
+      <div class="bg-surfaceHighlight/50 p-6 rounded-2xl border border-border">
+        <h3 class="font-bold text-textMain mb-2 text-lg">Coordonnées</h3>
+        <p class="text-textMuted">55 rue de la Peloue<br>33127 Saint-Jean-d'Illac, France<br>antoine.laborderie+tanzia_legals@gmail.com</p>
+      </div>
+
+      <div class="bg-surfaceHighlight/50 p-6 rounded-2xl border border-border">
+        <h3 class="font-bold text-textMain mb-2 text-lg">Hébergement</h3>
+        <p class="text-textMuted">OVH<br>2 rue Kellermann<br>59100 Roubaix, France</p>
+      </div>
+
+      <div class="bg-surfaceHighlight/50 p-6 rounded-2xl border border-border">
+        <h3 class="font-bold text-textMain mb-2 text-lg">Activité</h3>
+        <p class="text-textMuted">Vente d’accès à l’application de gestion de tantièmes et charges de copropriété.</p>
+      </div>
+    </div>
+    
+    <div class="mt-12 pt-6 border-t border-border text-center">
+      <p class="text-sm text-primary font-medium">Dernière mise à jour : Mai 2025</p>
+    </div>
+  </div>
 </section>
 {{end}}
