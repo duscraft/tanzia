@@ -1,74 +1,46 @@
 {{define "content"}}
-<main
-  class="flex-grow flex flex-col items-center justify-center pb-20 px-6 sm:px-12 text-center max-w-5xl mx-auto"
->
-  <div
-    class="max-w-md w-full p-8 bg-[#232e3f] rounded-3xl shadow-xl border border-blue-800"
-  >
-    <h2 class="text-3xl font-extrabold text-accentlighter mb-8 text-center">
-      Créer un compte Tanzia
-    </h2>
-    <form action="/signup" method="POST" class="space-y-8" onsubmit="return validateSignupForm(event)">
-      <div>
-        <label for="email" class="block mb-2 text-lightgray font-semibold"
-          >Email</label
-        >
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-          placeholder="Votre e-mail"
-        />
+<main class="flex-grow flex flex-col items-center justify-center py-20 px-6 sm:px-12 text-center max-w-7xl mx-auto">
+  <div class="w-full max-w-md bg-surface p-8 sm:p-10 rounded-3xl shadow-xl border border-border">
+    <div class="mb-8">
+      <h2 class="text-3xl font-extrabold text-textMain tracking-tight mb-2">Créer un compte</h2>
+      <p class="text-textMuted">Rejoignez Tanzia et simplifiez votre gestion</p>
+    </div>
+    
+    <form action="/signup" method="POST" class="space-y-5" onsubmit="return validateSignupForm(event)">
+      <div class="text-left">
+        <label for="email" class="block mb-2 text-sm font-semibold text-textMain">E-mail</label>
+        <input type="email" id="email" name="email" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="votre@email.com" />
       </div>
-      <div>
-        <label for="name" class="block mb-2 text-lightgray font-semibold"
-          >Nom d'utilisateur</label
-        >
-        <input
-          type="text"
-          id="name"
-          name="name"
-          required
-          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-          placeholder="Votre nom d'utilisateur"
-        />
+      <div class="text-left">
+        <label for="name" class="block mb-2 text-sm font-semibold text-textMain">Nom d'utilisateur</label>
+        <input type="text" id="name" name="name" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="Votre nom" />
       </div>
-      <div>
-        <label for="password" class="block mb-2 text-lightgray font-semibold"
-          >Mot de passe</label
-        >
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-          placeholder="Votre mot de passe"
-        />
+      <div class="text-left">
+        <label for="password" class="block mb-2 text-sm font-semibold text-textMain">Mot de passe</label>
+        <input type="password" id="password" name="password" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="••••••••" />
       </div>
-      <div>
-        <label
-          for="confirm_password"
-          class="block mb-2 text-lightgray font-semibold"
-          >Confirmer le mot de passe</label
-        >
-        <input
-          type="password"
-          id="confirm_password"
-          name="confirm_password"
-          required
-          class="w-full px-4 py-3 rounded-lg bg-[#1f2a44] border border-blue-700 text-lightgray placeholder:text-blue-400 focus:outline-none focus:ring-2 focus:ring-accentlighter"
-          placeholder="Confirmez votre mot de passe"
-        />
+      <div class="text-left">
+        <label for="confirm_password" class="block mb-2 text-sm font-semibold text-textMain">Confirmer le mot de passe</label>
+        <input type="password" id="confirm_password" name="confirm_password" required
+          class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          placeholder="••••••••" />
       </div>
-      <button
-        type="submit"
-        class="w-full bg-accentblue hover:bg-accentdarker text-white mt-4 py-3 rounded-lg font-bold shadow-lg transition"
-      >
-        S'inscrire
+      
+      <button type="submit"
+        class="w-full bg-primary hover:bg-primaryHover text-white mt-2 py-3.5 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:shadow-primary/40 active:scale-[0.98]">
+        S'inscrire gratuitement
       </button>
+      
+      <div class="pt-4 text-sm text-textMuted">
+        Déjà un compte ? 
+        <a href="/login" class="font-bold text-primary hover:text-primaryHover transition-colors">Se connecter</a>
+      </div>
     </form>
   </div>
 </main>
