@@ -57,7 +57,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: cookie.String(), MaxAge: 86_400, HttpOnly: true})
+	http.SetCookie(w, &http.Cookie{
+		Name:     "tanzia-session",
+		Value:    cookie.String(),
+		MaxAge:   86_400,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
 
@@ -78,7 +85,14 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Session save error: %v", err)
 	}
 
-	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: "", MaxAge: -1, HttpOnly: true})
+	http.SetCookie(w, &http.Cookie{
+		Name:     "tanzia-session",
+		Value:    "",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
 

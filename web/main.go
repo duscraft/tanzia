@@ -25,6 +25,7 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
@@ -44,6 +45,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
@@ -58,6 +60,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "app")
 }
@@ -72,6 +75,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "app")
 }
@@ -86,6 +90,7 @@ func cgvHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
@@ -100,6 +105,7 @@ func legalsHandler(w http.ResponseWriter, r *http.Request) {
 	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }

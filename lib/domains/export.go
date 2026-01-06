@@ -47,7 +47,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 	pdf.AddPage()
 
 	pdf.SetFont("Arial", "B", 20)
-	pdf.Cell(0, 12, "Tanzia - Rapport de Copropriete")
+	pdf.Cell(0, 12, "Tanzia - Rapport de Copropriété")
 	pdf.Ln(15)
 
 	pdf.SetFont("Arial", "", 10)
@@ -64,7 +64,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 		colWidths := []float64{80, 50, 50}
 		pdf.CellFormat(colWidths[0], 7, "Libelle", "1", 0, "L", true, 0, "")
 		pdf.CellFormat(colWidths[1], 7, "Montant", "1", 0, "R", true, 0, "")
-		pdf.CellFormat(colWidths[2], 7, "Total Tantiemes", "1", 1, "R", true, 0, "")
+		pdf.CellFormat(colWidths[2], 7, "Total Tantièmes", "1", 1, "R", true, 0, "")
 
 		pdf.SetFont("Arial", "", 9)
 		for i, provision := range data.Provisions {
@@ -92,7 +92,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 		colWidths := []float64{80, 50, 50}
 		pdf.CellFormat(colWidths[0], 7, "Libelle", "1", 0, "L", true, 0, "")
 		pdf.CellFormat(colWidths[1], 7, "Montant", "1", 0, "R", true, 0, "")
-		pdf.CellFormat(colWidths[2], 7, "Total Tantiemes", "1", 1, "R", true, 0, "")
+		pdf.CellFormat(colWidths[2], 7, "Total Tantièmes", "1", 1, "R", true, 0, "")
 
 		pdf.SetFont("Arial", "", 9)
 		for i, bill := range data.Bills {
@@ -112,14 +112,14 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(data.Persons) > 0 {
 		pdf.SetFont("Arial", "B", 14)
-		pdf.Cell(0, 10, "Coproprietaires")
+		pdf.Cell(0, 10, "Copropriétaires")
 		pdf.Ln(10)
 
 		pdf.SetFont("Arial", "B", 9)
 		pdf.SetFillColor(220, 220, 220)
 		colWidths := []float64{60, 40, 40, 40}
 		pdf.CellFormat(colWidths[0], 7, "Nom", "1", 0, "L", true, 0, "")
-		pdf.CellFormat(colWidths[1], 7, "Tantiemes", "1", 0, "R", true, 0, "")
+		pdf.CellFormat(colWidths[1], 7, "Tantièmes", "1", 0, "R", true, 0, "")
 		pdf.CellFormat(colWidths[2], 7, "Part (%)", "1", 0, "R", true, 0, "")
 		pdf.CellFormat(colWidths[3], 7, "Solde", "1", 1, "R", true, 0, "")
 
@@ -154,7 +154,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 
 	pdf.Ln(20)
 	pdf.SetFont("Arial", "I", 8)
-	pdf.Cell(0, 5, fmt.Sprintf("Document genere automatiquement par Tanzia le %s", time.Now().Format("02/01/2006 15:04")))
+	pdf.Cell(0, 5, fmt.Sprintf("Document généré automatiquement par Tanzia le %s", time.Now().Format("02/01/2006 15:04")))
 
 	w.Header().Set("Content-Type", "application/pdf")
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=tanzia-rapport-%s.pdf", time.Now().Format("2006-01-02")))
