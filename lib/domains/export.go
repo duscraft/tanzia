@@ -62,7 +62,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 		pdf.SetFont("Arial", "B", 9)
 		pdf.SetFillColor(220, 220, 220)
 		colWidths := []float64{80, 50, 50}
-		pdf.CellFormat(colWidths[0], 7, "Libelle", "1", 0, "L", true, 0, "")
+		pdf.CellFormat(colWidths[0], 7, "Libellé", "1", 0, "L", true, 0, "")
 		pdf.CellFormat(colWidths[1], 7, "Montant", "1", 0, "R", true, 0, "")
 		pdf.CellFormat(colWidths[2], 7, "Total Tantièmes", "1", 1, "R", true, 0, "")
 
@@ -90,7 +90,7 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 		pdf.SetFont("Arial", "B", 9)
 		pdf.SetFillColor(220, 220, 220)
 		colWidths := []float64{80, 50, 50}
-		pdf.CellFormat(colWidths[0], 7, "Libelle", "1", 0, "L", true, 0, "")
+		pdf.CellFormat(colWidths[0], 7, "Libellé", "1", 0, "L", true, 0, "")
 		pdf.CellFormat(colWidths[1], 7, "Montant", "1", 0, "R", true, 0, "")
 		pdf.CellFormat(colWidths[2], 7, "Total Tantièmes", "1", 1, "R", true, 0, "")
 
@@ -162,5 +162,6 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 	if err := pdf.Output(w); err != nil {
 		log.Printf("Error generating PDF: %v", err)
 		http.Error(w, "Failed to generate PDF", http.StatusInternalServerError)
+		return
 	}
 }
