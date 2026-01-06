@@ -15,11 +15,17 @@ import (
 )
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("web/templates/404.html", "web/templates/base-layout.html")
-	w.WriteHeader(http.StatusNotFound)
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/404.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Page not found", http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusNotFound)
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
@@ -30,54 +36,84 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, _ := template.ParseFiles("web/templates/index.html", "web/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/index.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("web/templates/login.html", "web/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/login.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "app")
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("web/templates/signup.html", "web/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/signup.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "app")
 }
 
 func cgvHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("web/templates/cgv.html", "web/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/cgv.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
 
 func legalsHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("web/templates/legals.html", "web/templates/base-layout.html")
-	err := t.ExecuteTemplate(w, "base", nil)
+	t, err := template.ParseFiles("web/templates/legals.html", "web/templates/base-layout.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	domains.LogUserConnection(w, r, "website")
 }
 
 func main() {
-	redisUrl := os.Getenv("REDIS_URL")
-	if len(redisUrl) == 0 {
-		redisUrl = "127.0.0.1"
+	redisURL := os.Getenv("REDIS_URL")
+	if len(redisURL) == 0 {
+		redisURL = "127.0.0.1"
 	}
 	redisPort := os.Getenv("REDIS_PORT")
 	if len(redisPort) == 0 {
@@ -85,7 +121,7 @@ func main() {
 	}
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: fmt.Sprintf("%s:%s", redisUrl, redisPort),
+			Addr: fmt.Sprintf("%s:%s", redisURL, redisPort),
 			DB:   0,
 		})),
 	)
@@ -113,6 +149,7 @@ func main() {
 	http.HandleFunc("POST /signup", domains.SignupHandler)
 	http.HandleFunc("GET /cgv", cgvHandler)
 	http.HandleFunc("GET /legals", legalsHandler)
+	http.HandleFunc("GET /export/pdf", domains.ExportPDFHandler)
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static/"))))
 	http.HandleFunc("GET /", indexHandler)
 
@@ -121,6 +158,6 @@ func main() {
 		port = "8080"
 	}
 
-	_, _ = fmt.Fprintf(os.Stdout, "Listening on port %s...", port)
+	log.Printf("Listening on port %s...", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
