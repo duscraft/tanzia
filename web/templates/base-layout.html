@@ -158,8 +158,8 @@
         <div>
            <h4 class="font-semibold text-textMain mb-4">Contact</h4>
            <ul class="space-y-2 text-sm text-textMuted">
-             <li><a href="https://github.com/alaborderie" target="_blank" class="hover:text-primary transition-colors">GitHub</a></li>
-             <li><a href="https://www.linkedin.com/in/antoine-laborderie/" target="_blank" class="hover:text-primary transition-colors">LinkedIn</a></li>
+             <li><a href="https://github.com/alaborderie" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">GitHub</a></li>
+             <li><a href="https://www.linkedin.com/in/antoine-laborderie/" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors">LinkedIn</a></li>
            </ul>
         </div>
       </div>
@@ -212,10 +212,10 @@
         updateIcons();
       }
 
-      themeToggleBtn.addEventListener('click', toggleTheme);
+      if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
       if(mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
       
-      updateIcons();
+      if (themeToggleBtn) updateIcons();
 
       document.addEventListener("DOMContentLoaded", () => {
         const banner = document.getElementById("cookie-banner");
