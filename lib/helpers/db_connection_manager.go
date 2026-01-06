@@ -88,7 +88,7 @@ func getURL(driver string) string {
 
 func createTables(db *sql.DB) error {
 	queries := []string{
-		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE)",
+		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE, stripe_customer_id TEXT)",
 		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",

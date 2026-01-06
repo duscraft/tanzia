@@ -110,6 +110,41 @@
     <div class="h-16"></div>
 
     <main class="max-w-7xl w-full mx-auto flex-grow px-4 sm:px-6 lg:px-8 py-12">
+      {{if not .IsPremium}}
+      <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primaryHover/10 border border-primary/20">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-textMain mb-1">Passez à Tanzia Premium</h3>
+            <p class="text-textMuted">Débloquez les copropriétaires, travaux et provisions illimités pour 9€/mois.</p>
+          </div>
+          <form action="/subscribe" method="POST">
+            <button type="submit" class="flex items-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+              Passer au Premium
+            </button>
+          </form>
+        </div>
+      </div>
+      {{else}}
+      <div class="mb-8 p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+              <span class="font-bold text-green-700 dark:text-green-400">Tanzia Premium</span>
+              <p class="text-sm text-textMuted">Vous bénéficiez d'un accès illimité.</p>
+            </div>
+          </div>
+          <form action="/customer-portal" method="POST">
+            <button type="submit" class="text-sm font-medium text-textMuted hover:text-textMain transition-colors underline underline-offset-2">
+              Gérer mon abonnement
+            </button>
+          </form>
+        </div>
+      </div>
+      {{end}}
       <div class="sm:hidden mb-8">
         <a href="/persons" class="flex w-full justify-center items-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-xl shadow-lg transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>

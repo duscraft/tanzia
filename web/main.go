@@ -150,6 +150,9 @@ func main() {
 	http.HandleFunc("GET /cgv", cgvHandler)
 	http.HandleFunc("GET /legals", legalsHandler)
 	http.HandleFunc("GET /export/pdf", domains.ExportPDFHandler)
+	http.HandleFunc("POST /subscribe", domains.CreateCheckoutSessionHandler)
+	http.HandleFunc("POST /customer-portal", domains.CustomerPortalHandler)
+	http.HandleFunc("POST /stripe/webhook", domains.StripeWebhookHandler)
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static/"))))
 	http.HandleFunc("GET /", indexHandler)
 
