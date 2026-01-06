@@ -1,10 +1,12 @@
 package domains
 
 import (
-	"github.com/duscraft/tanzia/lib/helpers"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/duscraft/tanzia/lib/helpers"
 )
 
 type Person struct {
@@ -14,22 +16,25 @@ type Person struct {
 
 func PersonHandler(w http.ResponseWriter, r *http.Request) {
 	_, ok := GetAuthenticatedUserID(w, r)
-
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	t, _ := template.ParseFiles("lib/templates/edit-persons.html")
-	err := t.Execute(w, nil)
+	t, err := template.ParseFiles("lib/templates/edit-persons.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+
+	if err := t.Execute(w, nil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
 	userID, ok := GetAuthenticatedUserID(w, r)
-
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
@@ -52,10 +57,16 @@ func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tantieme, _ := strconv.Atoi(r.FormValue("tantieme"))
+	tantieme, err := strconv.Atoi(r.FormValue("tantieme"))
+	if err != nil {
+		http.Error(w, "Invalid tantieme value", http.StatusBadRequest)
+		return
+	}
+
 	_, err = db.Exec("INSERT INTO persons (name, tantieme, userId) VALUES ($1, $2, $3)", r.FormValue("name"), tantieme, userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	http.Redirect(w, r, "/dashboard#person_added", http.StatusFound)
@@ -70,15 +81,15 @@ func (person *Person) CalculateProvision(totalTantiemes int, provision Provision
 }
 
 func (person *Person) CalculateLeft(totalTantiemes int, bills []Bill, provisions []Provision) float64 {
-	var Balance float64 = 0
+	var balance float64 = 0
 
 	for _, bill := range bills {
-		Balance -= person.CalculateDue(totalTantiemes, bill)
+		balance -= person.CalculateDue(totalTantiemes, bill)
 	}
 
 	for _, provision := range provisions {
-		Balance += person.CalculateProvision(totalTantiemes, provision)
+		balance += person.CalculateProvision(totalTantiemes, provision)
 	}
 
-	return Balance
+	return balance
 }

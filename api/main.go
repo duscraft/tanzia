@@ -13,9 +13,9 @@ import (
 )
 
 func main() {
-	redisUrl := os.Getenv("REDIS_URL")
-	if len(redisUrl) == 0 {
-		redisUrl = "127.0.0.1"
+	redisURL := os.Getenv("REDIS_URL")
+	if len(redisURL) == 0 {
+		redisURL = "127.0.0.1"
 	}
 	redisPort := os.Getenv("REDIS_PORT")
 	if len(redisPort) == 0 {
@@ -23,7 +23,7 @@ func main() {
 	}
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: fmt.Sprintf("%s:%s", redisUrl, redisPort),
+			Addr: fmt.Sprintf("%s:%s", redisURL, redisPort),
 			DB:   0,
 		})),
 	)
@@ -42,6 +42,6 @@ func main() {
 		port = "8080"
 	}
 
-	_, _ = fmt.Fprintf(os.Stdout, "Listening on port %s...", port)
+	log.Printf("Listening on port %s...", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

@@ -2,6 +2,7 @@ package domains
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -15,7 +16,6 @@ type Bill struct {
 
 func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	userID, ok := GetAuthenticatedUserID(w, r)
-
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
@@ -38,10 +38,16 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	amount, _ := strconv.ParseFloat(r.FormValue("amount"), 64)
+	amount, err := strconv.ParseFloat(r.FormValue("amount"), 64)
+	if err != nil {
+		http.Error(w, "Invalid amount value", http.StatusBadRequest)
+		return
+	}
+
 	_, err = db.Exec("INSERT INTO bills (label, amount, userId) VALUES ($1, $2, $3)", r.FormValue("label"), amount, userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	http.Redirect(w, r, "/dashboard#bill_added", http.StatusFound)
@@ -49,15 +55,19 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 
 func BillsHandler(w http.ResponseWriter, r *http.Request) {
 	_, ok := GetAuthenticatedUserID(w, r)
-
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	t, _ := template.ParseFiles("lib/templates/edit-bills.html")
-	err := t.Execute(w, nil)
+	t, err := template.ParseFiles("lib/templates/edit-bills.html")
 	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+
+	if err := t.Execute(w, nil); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

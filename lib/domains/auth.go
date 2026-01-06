@@ -16,7 +16,9 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
-		log.Fatal("Could not connect to redis")
+		log.Printf("Session error: %v", err)
+		http.Error(w, "Session error", http.StatusInternalServerError)
+		return
 	}
 
 	email := r.FormValue("email")
@@ -34,13 +36,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	defer func() { _ = result.Close() }()
+
 	if !result.Next() {
 		http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
 		return
 	}
 
-	err = result.Scan(&userID)
-	if err != nil {
+	if err := result.Scan(&userID); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -48,9 +51,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	cookie := uuid.New()
 	store.Set(cookie.String(), userID)
 
-	err = store.Save()
-	if err != nil {
-		log.Fatal("Could not save session to redis")
+	if err := store.Save(); err != nil {
+		log.Printf("Session save error: %v", err)
+		http.Error(w, "Session error", http.StatusInternalServerError)
+		return
 	}
 
 	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: cookie.String(), MaxAge: 86_400, HttpOnly: true})
@@ -60,14 +64,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
-		log.Fatal("Could not connect to redis")
+		log.Printf("Session error: %v", err)
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
 	}
 
-	cookie := r.Header.Get("Cookie")
-	store.Delete(cookie)
-	err = store.Save()
-	if err != nil {
-		log.Fatal("Could not save session to redis")
+	cookie, err := r.Cookie("tanzia-session")
+	if err == nil {
+		store.Delete(cookie.Value)
+	}
+
+	if err := store.Save(); err != nil {
+		log.Printf("Session save error: %v", err)
 	}
 
 	http.SetCookie(w, &http.Cookie{Name: "tanzia-session", Value: "", MaxAge: -1, HttpOnly: true})
@@ -77,7 +85,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 func GetAuthenticatedUserID(w http.ResponseWriter, r *http.Request) (string, bool) {
 	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
-		log.Fatal("Could not connect to redis")
+		log.Printf("Session error: %v", err)
+		return "", false
 	}
 
 	cookie, err := r.Cookie("tanzia-session")
@@ -92,7 +101,9 @@ func GetAuthenticatedUserID(w http.ResponseWriter, r *http.Request) (string, boo
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	_, err := session.Start(context.Background(), w, r)
 	if err != nil {
-		log.Fatal("Could not connect to redis")
+		log.Printf("Session error: %v", err)
+		http.Error(w, "Session error", http.StatusInternalServerError)
+		return
 	}
 
 	email := r.FormValue("email")
@@ -130,7 +141,6 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func isValidEmail(email string) bool {
-	// Simple regex for email validation
 	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	re := regexp.MustCompile(emailRegex)
 	return re.MatchString(email)

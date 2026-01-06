@@ -1,9 +1,11 @@
 package domains
 
 import (
-	"github.com/duscraft/tanzia/lib/helpers"
 	"html/template"
+	"log"
 	"net/http"
+
+	"github.com/duscraft/tanzia/lib/helpers"
 )
 
 type DashboardData struct {
@@ -12,76 +14,114 @@ type DashboardData struct {
 	Provisions     []Provision
 	TotalTantiemes int
 	Balance        float64
+	IsPremium      bool
 }
 
-func getDashboardData(userID string) DashboardData {
+func getDashboardData(userID string) (DashboardData, error) {
 	db, err := helpers.GetConnectionManager().GetConnection("postgres")
 	if err != nil {
-		panic(err)
+		return DashboardData{}, err
 	}
 
-	personRows, _ := db.Query("SELECT name, tantieme FROM persons WHERE userId = $1", userID)
-	billRows, _ := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userID)
-	provisionRows, _ := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userID)
+	personRows, err := db.Query("SELECT name, tantieme FROM persons WHERE userId = $1", userID)
+	if err != nil {
+		return DashboardData{}, err
+	}
+	defer func() { _ = personRows.Close() }()
 
-	var Persons []Person
-	var Bills []Bill
-	var Provisions []Provision
-	var Balance float64
-	TotalTantiemes := 0
+	billRows, err := db.Query("SELECT label, amount FROM bills WHERE userId = $1", userID)
+	if err != nil {
+		return DashboardData{}, err
+	}
+	defer func() { _ = billRows.Close() }()
+
+	provisionRows, err := db.Query("SELECT label, amount FROM provisions WHERE userId = $1", userID)
+	if err != nil {
+		return DashboardData{}, err
+	}
+	defer func() { _ = provisionRows.Close() }()
+
+	var persons []Person
+	var bills []Bill
+	var provisions []Provision
+	var balance float64
+	totalTantiemes := 0
 
 	for personRows.Next() {
 		var person Person
-		err := personRows.Scan(&person.Name, &person.Tantieme)
-		if err != nil {
-			panic(err)
+		if err := personRows.Scan(&person.Name, &person.Tantieme); err != nil {
+			return DashboardData{}, err
 		}
-		Persons = append(Persons, person)
-		TotalTantiemes += person.Tantieme
+		persons = append(persons, person)
+		totalTantiemes += person.Tantieme
+	}
+	if err := personRows.Err(); err != nil {
+		return DashboardData{}, err
 	}
 
 	for billRows.Next() {
 		var bill Bill
-		err := billRows.Scan(&bill.Label, &bill.Amount)
-		if err != nil {
-			panic(err)
+		if err := billRows.Scan(&bill.Label, &bill.Amount); err != nil {
+			return DashboardData{}, err
 		}
-		Balance -= bill.Amount
-		Bills = append(Bills, bill)
+		balance -= bill.Amount
+		bills = append(bills, bill)
+	}
+	if err := billRows.Err(); err != nil {
+		return DashboardData{}, err
 	}
 
 	for provisionRows.Next() {
 		var provision Provision
-		err := provisionRows.Scan(&provision.Label, &provision.Amount)
-		if err != nil {
-			panic(err)
+		if err := provisionRows.Scan(&provision.Label, &provision.Amount); err != nil {
+			return DashboardData{}, err
 		}
-		Balance += provision.Amount
-		Provisions = append(Provisions, provision)
+		balance += provision.Amount
+		provisions = append(provisions, provision)
+	}
+	if err := provisionRows.Err(); err != nil {
+		return DashboardData{}, err
+	}
+
+	isPremium, err := helpers.IsUserPremium(db, userID)
+	if err != nil {
+		log.Printf("Warning: could not check premium status for user %s: %v", userID, err)
+		isPremium = false
 	}
 
 	return DashboardData{
-		Persons,
-		Bills,
-		Provisions,
-		TotalTantiemes,
-		Balance,
-	}
+		Persons:        persons,
+		Bills:          bills,
+		Provisions:     provisions,
+		TotalTantiemes: totalTantiemes,
+		Balance:        balance,
+		IsPremium:      isPremium,
+	}, nil
 }
 
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	userID, ok := GetAuthenticatedUserID(w, r)
-
 	if !ok {
 		http.Redirect(w, r, "/logout", http.StatusFound)
 		return
 	}
 
-	data := getDashboardData(userID)
-
-	t, _ := template.ParseFiles("lib/templates/dashboard.html")
-	err := t.Execute(w, data)
+	data, err := getDashboardData(userID)
 	if err != nil {
+		log.Printf("Error getting dashboard data: %v", err)
+		http.Error(w, "Failed to load dashboard data", http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.ParseFiles("lib/templates/dashboard.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+
+	if err := t.Execute(w, data); err != nil {
+		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
