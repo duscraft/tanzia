@@ -40,47 +40,45 @@
 ## Payment Integration Roadmap
 
 ### Phase 1: Stripe Setup
-- [ ] Create Stripe account and get API keys
-- [ ] Add Stripe Go SDK: `go get github.com/stripe/stripe-go/v76`
-- [ ] Store Stripe keys in environment variables:
+- [x] Create Stripe account and get API keys
+- [x] Add Stripe Go SDK: `go get github.com/stripe/stripe-go/v76`
+- [x] Store Stripe keys in environment variables:
   - `STRIPE_SECRET_KEY`
   - `STRIPE_PUBLISHABLE_KEY`
   - `STRIPE_WEBHOOK_SECRET`
-- [ ] Create `lib/helpers/stripe.go` for Stripe integration
+- [x] Create `lib/domains/stripe.go` for Stripe integration
 
 ### Phase 2: Database Schema Updates
-```sql
-ALTER TABLE users ADD COLUMN stripe_customer_id TEXT;
-ALTER TABLE users ADD COLUMN subscription_id TEXT;
-ALTER TABLE users ADD COLUMN subscription_status TEXT DEFAULT 'none';
-ALTER TABLE users ADD COLUMN subscription_end_date TIMESTAMP;
-```
+- [x] Add stripe_customer_id column to users table
+- [x] Database migration handles both new and existing installations
 
 ### Phase 3: Checkout Flow
-- [ ] Create checkout session endpoint `POST /api/checkout`
-- [ ] Implement Stripe Checkout redirect
-- [ ] Create success/cancel pages
-- [ ] Add pricing page with subscription options
+- [x] Create checkout session endpoint `POST /subscribe`
+- [x] Implement Stripe Checkout redirect
+- [x] Create success page (redirects to dashboard with premium status)
+- [x] Add pricing page with subscription options on homepage
+- [x] Improve premium signup flow (redirect unauthenticated users to signup, auto-login after signup)
 
 ### Phase 4: Webhook Handler
-- [ ] Implement webhook endpoint `POST /api/webhooks/stripe`
-- [ ] Handle `checkout.session.completed` event
-- [ ] Handle `customer.subscription.updated` event
-- [ ] Handle `customer.subscription.deleted` event
-- [ ] Handle `invoice.payment_failed` event
-- [ ] Verify webhook signatures
+- [x] Implement webhook endpoint `POST /webhooks/stripe`
+- [x] Handle `checkout.session.completed` event
+- [x] Handle `customer.subscription.updated` event
+- [x] Handle `customer.subscription.deleted` event
+- [x] Handle `invoice.payment_failed` event
+- [x] Verify webhook signatures
+- [x] Proper error handling (return 500 so Stripe retries on failure)
 
 ### Phase 5: Subscription Management
-- [ ] Create customer portal link endpoint
-- [ ] Implement subscription cancellation
+- [x] Create customer portal link endpoint (`GET /billing`)
+- [x] Implement subscription cancellation (via Stripe Customer Portal)
 - [ ] Add grace period handling
 - [ ] Send email notifications for subscription events
 
 ### Phase 6: Premium Features Enforcement
-- [ ] Update IsUserPremium to check subscription_status and subscription_end_date
+- [x] Update IsUserPremium to check stripe_customer_id
 - [ ] Add premium badge to dashboard UI
 - [ ] Show upgrade prompts for free users at limits
-- [ ] Implement feature gates for premium-only features
+- [x] Implement feature gates for premium-only features (PDF export, limits)
 
 ---
 
