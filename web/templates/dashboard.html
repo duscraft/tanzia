@@ -117,7 +117,8 @@
             <h3 class="text-lg font-bold text-textMain mb-1">Passez à Tanzia Premium</h3>
             <p class="text-textMuted">Débloquez les copropriétaires, travaux et provisions illimités pour 9€/mois.</p>
           </div>
-          <form action="/subscribe" method="POST">
+          <form action="/subscribe" method="POST" class="subscribe-form">
+            <input type="hidden" name="csrf_token" class="csrf_token" value="" />
             <button type="submit" class="flex items-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 whitespace-nowrap">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
               Passer au Premium
@@ -137,7 +138,8 @@
               <p class="text-sm text-textMuted">Vous bénéficiez d'un accès illimité.</p>
             </div>
           </div>
-          <form action="/customer-portal" method="POST">
+          <form action="/customer-portal" method="POST" class="portal-form">
+            <input type="hidden" name="csrf_token" class="csrf_token" value="" />
             <button type="submit" class="text-sm font-medium text-textMuted hover:text-textMain transition-colors underline underline-offset-2">
               Gérer mon abonnement
             </button>
@@ -339,7 +341,8 @@
           <h3 class="text-xl font-bold text-textMain mb-2">Limite atteinte</h3>
           <p id="upgrade-modal-message" class="text-textMuted mb-6">Vous avez atteint la limite de votre forfait gratuit.</p>
           <div class="flex flex-col gap-3">
-            <form action="/subscribe" method="POST">
+            <form action="/subscribe" method="POST" class="subscribe-form">
+              <input type="hidden" name="csrf_token" class="csrf_token" value="" />
               <button type="submit" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                 Passer au Premium - 9€/mois
@@ -395,6 +398,16 @@
           closeUpgradeModal();
         }
       });
+
+      (function() {
+        var csrfCookie = document.cookie.split('; ').find(function(row) { return row.startsWith('tanzia-csrf='); });
+        if (csrfCookie) {
+          var token = csrfCookie.split('=')[1];
+          document.querySelectorAll('.csrf_token').forEach(function(el) {
+            el.value = token;
+          });
+        }
+      })();
     </script>
   </body>
 </html>
