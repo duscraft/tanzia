@@ -173,6 +173,8 @@ func StripeWebhookHandler(w http.ResponseWriter, r *http.Request) {
 	case "checkout.session.completed":
 		handleCheckoutCompleted(db, event)
 	case "customer.subscription.updated":
+	case "customer.subscription.created":
+	case "customer.subscription.resumed":
 		handleSubscriptionUpdated(db, event)
 	case "customer.subscription.deleted":
 		handleSubscriptionDeleted(db, event)
