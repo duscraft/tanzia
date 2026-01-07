@@ -117,6 +117,21 @@ func legalsHandler(w http.ResponseWriter, r *http.Request) {
 	domains.LogUserConnection(w, r, "website")
 }
 
+func resetPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("web/templates/reset-password.html", "web/templates/base-layout.html")
+	if err != nil {
+		log.Printf("Error parsing template: %v", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		return
+	}
+	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	domains.LogUserConnection(w, r, "app")
+}
+
 func main() {
 	redisURL := os.Getenv("REDIS_URL")
 	if len(redisURL) == 0 {
@@ -156,6 +171,8 @@ func main() {
 	http.HandleFunc("POST /signup", domains.SignupHandler)
 	http.HandleFunc("GET /cgv", cgvHandler)
 	http.HandleFunc("GET /legals", legalsHandler)
+	http.HandleFunc("GET /reset-password", resetPasswordHandler)
+	http.HandleFunc("POST /reset-password", domains.ResetPasswordHandler)
 	http.HandleFunc("GET /export/pdf", domains.ExportPDFHandler)
 	http.HandleFunc("POST /subscribe", domains.CreateCheckoutSessionHandler)
 	http.HandleFunc("GET /subscribe", domains.CreateCheckoutSessionHandler)
