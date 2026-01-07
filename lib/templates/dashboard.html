@@ -293,5 +293,68 @@
       themeToggleBtn.addEventListener('click', toggleTheme);
       updateIcons();
     </script>
+
+    <div id="upgrade-modal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeUpgradeModal()"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6 bg-surface rounded-2xl border border-border shadow-2xl">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-textMain mb-2">Limite atteinte</h3>
+          <p id="upgrade-modal-message" class="text-textMuted mb-6">Vous avez atteint la limite de votre forfait gratuit.</p>
+          <div class="flex flex-col gap-3">
+            <form action="/subscribe" method="POST">
+              <button type="submit" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                Passer au Premium - 9€/mois
+              </button>
+            </form>
+            <button onclick="closeUpgradeModal()" class="w-full text-textMuted hover:text-textMain font-medium py-2 transition-colors">
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const limitMessages = {
+        'limit-persons': 'Vous avez atteint la limite de 5 copropriétaires. Passez au Premium pour en ajouter plus.',
+        'limit-bills': 'Vous avez atteint la limite de 5 travaux. Passez au Premium pour en ajouter plus.',
+        'limit-provisions': 'Vous avez atteint la limite de 10 provisions. Passez au Premium pour en ajouter plus.'
+      };
+
+      function showUpgradeModal(limitType) {
+        const modal = document.getElementById('upgrade-modal');
+        const message = document.getElementById('upgrade-modal-message');
+        message.textContent = limitMessages[limitType] || 'Vous avez atteint la limite de votre forfait gratuit.';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeUpgradeModal() {
+        const modal = document.getElementById('upgrade-modal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        history.replaceState(null, '', window.location.pathname);
+      }
+
+      function checkLimitHash() {
+        const hash = window.location.hash.substring(1);
+        if (hash && limitMessages[hash]) {
+          showUpgradeModal(hash);
+        }
+      }
+
+      checkLimitHash();
+      window.addEventListener('hashchange', checkLimitHash);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeUpgradeModal();
+        }
+      });
+    </script>
   </body>
 </html>
