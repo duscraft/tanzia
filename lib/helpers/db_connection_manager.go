@@ -88,7 +88,7 @@ func getURL(driver string) string {
 
 func createTables(db *sql.DB) error {
 	queries := []string{
-		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE)",
+		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE, stripe_customer_id TEXT)",
 		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
@@ -99,5 +99,22 @@ func createTables(db *sql.DB) error {
 			return fmt.Errorf("failed to execute query: %w", err)
 		}
 	}
+
+	// Migration: Add stripe_customer_id column if it doesn't exist (for existing installations)
+	_, err := db.Exec(`
+		DO $$
+		BEGIN
+			IF NOT EXISTS (
+				SELECT 1 FROM information_schema.columns 
+				WHERE table_name='users' AND column_name='stripe_customer_id'
+			) THEN
+				ALTER TABLE users ADD COLUMN stripe_customer_id TEXT;
+			END IF;
+		END $$;
+	`)
+	if err != nil {
+		return fmt.Errorf("failed to migrate stripe_customer_id column: %w", err)
+	}
+
 	return nil
 }
