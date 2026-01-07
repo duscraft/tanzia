@@ -30,7 +30,7 @@
 - [x] Add password strength validation
 
 ### Session Security
-- [ ] Add CSRF protection for form submissions
+- [x] Add CSRF protection for form submissions
 - [x] Implement secure cookie settings (Secure, SameSite)
 - [x] Add rate limiting for login attempts
 - [x] Implement account lockout after failed attempts
@@ -86,7 +86,8 @@
 
 ### Unit Tests
 - [ ] Add tests for authentication handlers (login, signup, logout)
-- [ ] Add tests for premium limiter functions
+- [x] Add tests for premium limiter functions
+- [x] Add tests for CSRF protection
 - [ ] Add tests for PDF export handler
 - [ ] Add tests for dashboard data retrieval
 

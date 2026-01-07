@@ -11,8 +11,8 @@ import (
 
 const (
 	csrfTokenLength   = 32
-	csrfCookieName    = "tanzia-csrf"
-	csrfFormFieldName = "csrf_token"
+	CSRFCookieName    = "tanzia-csrf"
+	CSRFFormFieldName = "csrf_token"
 	csrfTokenExpiry   = 24 * time.Hour
 )
 
@@ -36,6 +36,12 @@ func GetCSRFManager() *CSRFManager {
 		go csrfManager.cleanup()
 	}
 	return csrfManager
+}
+
+func NewCSRFManager() *CSRFManager {
+	return &CSRFManager{
+		tokens: make(map[string]*csrfToken),
+	}
 }
 
 func GenerateCSRFToken() (string, error) {
@@ -86,9 +92,25 @@ func (cm *CSRFManager) InvalidateToken(sessionID string) {
 	delete(cm.tokens, sessionID)
 }
 
+func (cm *CSRFManager) GetToken(sessionID string) string {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+
+	stored, exists := cm.tokens[sessionID]
+	if !exists {
+		return ""
+	}
+
+	if time.Since(stored.createdAt) > csrfTokenExpiry {
+		return ""
+	}
+
+	return stored.token
+}
+
 func SetCSRFCookie(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     csrfCookieName,
+		Name:     CSRFCookieName,
 		Value:    token,
 		MaxAge:   int(csrfTokenExpiry.Seconds()),
 		HttpOnly: false,
@@ -99,7 +121,7 @@ func SetCSRFCookie(w http.ResponseWriter, token string) {
 }
 
 func GetCSRFTokenFromRequest(r *http.Request) string {
-	token := r.FormValue(csrfFormFieldName)
+	token := r.FormValue(CSRFFormFieldName)
 	if token != "" {
 		return token
 	}
@@ -109,12 +131,20 @@ func GetCSRFTokenFromRequest(r *http.Request) string {
 		return token
 	}
 
-	cookie, err := r.Cookie(csrfCookieName)
+	cookie, err := r.Cookie(CSRFCookieName)
 	if err == nil {
 		return cookie.Value
 	}
 
 	return ""
+}
+
+func GetSessionIDFromRequest(r *http.Request) string {
+	cookie, err := r.Cookie("tanzia-session")
+	if err != nil {
+		return ""
+	}
+	return cookie.Value
 }
 
 func (cm *CSRFManager) cleanup() {

@@ -118,6 +118,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	})
+
+	csrfMgr := helpers.GetCSRFManager()
+	csrfToken, err := csrfMgr.CreateToken(cookie.String())
+	if err == nil {
+		helpers.SetCSRFCookie(w, csrfToken)
+	}
+
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
 
@@ -230,6 +237,12 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	})
+
+	csrfMgr := helpers.GetCSRFManager()
+	csrfToken, err := csrfMgr.CreateToken(cookie.String())
+	if err == nil {
+		helpers.SetCSRFCookie(w, csrfToken)
+	}
 
 	if redirect == "subscribe" {
 		http.Redirect(w, r, "/subscribe", http.StatusSeeOther)
