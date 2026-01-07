@@ -113,7 +113,7 @@ func GetAuthenticatedUserID(w http.ResponseWriter, r *http.Request) (string, boo
 }
 
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := session.Start(context.Background(), w, r)
+	store, err := session.Start(context.Background(), w, r)
 	if err != nil {
 		log.Printf("Session error: %v", err)
 		http.Error(w, "Session error", http.StatusInternalServerError)
@@ -123,6 +123,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	name := r.FormValue("name")
 	password := r.FormValue("password")
+	redirect := r.FormValue("redirect")
 
 	if email == "" || name == "" {
 		http.Error(w, "Email and name cannot be empty", http.StatusBadRequest)
@@ -145,13 +146,37 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO users (email, name, password, is_premium) VALUES ($1, $2, $3, $4)", email, name, password, false)
+	var userID int
+	err = db.QueryRow("INSERT INTO users (email, name, password, is_premium) VALUES ($1, $2, $3, $4) RETURNING id", email, name, password, false).Scan(&userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, "/login", http.StatusFound)
+	cookie := uuid.New()
+	store.Set(cookie.String(), fmt.Sprintf("%d", userID))
+
+	if err := store.Save(); err != nil {
+		log.Printf("Session save error: %v", err)
+		http.Error(w, "Session error", http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "tanzia-session",
+		Value:    cookie.String(),
+		MaxAge:   86_400,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	if redirect == "subscribe" {
+		http.Redirect(w, r, "/subscribe", http.StatusSeeOther)
+		return
+	}
+
+	http.Redirect(w, r, "/dashboard", http.StatusFound)
 }
 
 func isValidEmail(email string) bool {

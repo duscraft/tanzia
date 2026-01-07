@@ -21,14 +21,14 @@ func init() {
 }
 
 func CreateCheckoutSessionHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPost && r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	userID, ok := GetAuthenticatedUserID(w, r)
 	if !ok {
-		http.Redirect(w, r, "/login", http.StatusFound)
+		http.Redirect(w, r, "/signup?redirect=subscribe", http.StatusFound)
 		return
 	}
 
