@@ -12,7 +12,7 @@ func TestIsUserPremium_PremiumUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "user-123"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -37,7 +37,7 @@ func TestIsUserPremium_FreeUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "user-456"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -62,7 +62,7 @@ func TestIsUserPremium_UserNotFound(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "nonexistent-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -87,7 +87,7 @@ func TestCanUserCreateProvision_PremiumUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "premium-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -112,7 +112,7 @@ func TestCanUserCreateProvision_FreeUserUnderLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -140,7 +140,7 @@ func TestCanUserCreateProvision_FreeUserAtLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user-at-limit"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -168,7 +168,7 @@ func TestCanUserCreateBill_PremiumUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "premium-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -193,7 +193,7 @@ func TestCanUserCreateBill_FreeUserUnderLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -221,7 +221,7 @@ func TestCanUserCreateBill_FreeUserAtLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user-at-limit"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -249,7 +249,7 @@ func TestCanUserCreatePerson_PremiumUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "premium-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -274,7 +274,7 @@ func TestCanUserCreatePerson_FreeUserUnderLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
@@ -302,7 +302,7 @@ func TestCanUserCreatePerson_FreeUserAtLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create mock: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	userID := "free-user-at-limit"
 	mock.ExpectQuery("SELECT is_premium FROM users WHERE id = \\$1").
