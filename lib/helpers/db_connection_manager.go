@@ -88,7 +88,7 @@ func getURL(driver string) string {
 
 func createTables(db *sql.DB) error {
 	queries := []string{
-		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE, stripe_customer_id TEXT)",
+		"CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT UNIQUE, password TEXT, is_premium BOOLEAN DEFAULT FALSE, stripe_customer_id TEXT, needs_password_reset BOOLEAN DEFAULT FALSE)",
 		"CREATE TABLE IF NOT EXISTS persons (name TEXT, tantieme INTEGER, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS bills (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
 		"CREATE TABLE IF NOT EXISTS provisions (label TEXT, amount FLOAT, userId INTEGER REFERENCES users(id))",
@@ -100,9 +100,8 @@ func createTables(db *sql.DB) error {
 		}
 	}
 
-	// Migration: Add stripe_customer_id column if it doesn't exist (for existing installations)
-	_, err := db.Exec(`
-		DO $$
+	migrations := []string{
+		`DO $$
 		BEGIN
 			IF NOT EXISTS (
 				SELECT 1 FROM information_schema.columns 
@@ -110,10 +109,22 @@ func createTables(db *sql.DB) error {
 			) THEN
 				ALTER TABLE users ADD COLUMN stripe_customer_id TEXT;
 			END IF;
-		END $$;
-	`)
-	if err != nil {
-		return fmt.Errorf("failed to migrate stripe_customer_id column: %w", err)
+		END $$;`,
+		`DO $$
+		BEGIN
+			IF NOT EXISTS (
+				SELECT 1 FROM information_schema.columns 
+				WHERE table_name='users' AND column_name='needs_password_reset'
+			) THEN
+				ALTER TABLE users ADD COLUMN needs_password_reset BOOLEAN DEFAULT FALSE;
+			END IF;
+		END $$;`,
+	}
+
+	for _, migration := range migrations {
+		if _, err := db.Exec(migration); err != nil {
+			return fmt.Errorf("failed to run migration: %w", err)
+		}
 	}
 
 	return nil

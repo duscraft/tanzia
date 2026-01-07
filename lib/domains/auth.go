@@ -31,7 +31,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userID string
-	result, err := db.Query("SELECT id FROM users WHERE email = $1 AND password = $2", email, password)
+	var storedPassword string
+	var needsPasswordReset bool
+	result, err := db.Query("SELECT id, password, needs_password_reset FROM users WHERE email = $1", email)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -43,8 +45,35 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := result.Scan(&userID); err != nil {
+	if err := result.Scan(&userID, &storedPassword, &needsPasswordReset); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if helpers.IsLegacyPassword(storedPassword) {
+		if password != storedPassword {
+			http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
+			return
+		}
+		hashedPassword, err := helpers.HashPassword(password)
+		if err != nil {
+			log.Printf("Failed to hash password during migration: %v", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		_, err = db.Exec("UPDATE users SET password = $1 WHERE id = $2", hashedPassword, userID)
+		if err != nil {
+			log.Printf("Failed to update password hash: %v", err)
+		}
+	} else {
+		if !helpers.CheckPassword(password, storedPassword) {
+			http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
+			return
+		}
+	}
+
+	if needsPasswordReset {
+		http.Redirect(w, r, "/reset-password#required", http.StatusFound)
 		return
 	}
 
@@ -135,8 +164,15 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(password) < 8 {
-		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+	if err := helpers.ValidatePasswordStrength(password); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	hashedPassword, err := helpers.HashPassword(password)
+	if err != nil {
+		log.Printf("Failed to hash password: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
@@ -147,7 +183,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userID int
-	err = db.QueryRow("INSERT INTO users (email, name, password, is_premium) VALUES ($1, $2, $3, $4) RETURNING id", email, name, password, false).Scan(&userID)
+	err = db.QueryRow("INSERT INTO users (email, name, password, is_premium, needs_password_reset) VALUES ($1, $2, $3, $4, $5) RETURNING id", email, name, hashedPassword, false, false).Scan(&userID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -183,4 +219,66 @@ func isValidEmail(email string) bool {
 	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	re := regexp.MustCompile(emailRegex)
 	return re.MatchString(email)
+}
+
+func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	userID, ok := GetAuthenticatedUserID(w, r)
+	if !ok {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+
+	currentPassword := r.FormValue("current_password")
+	newPassword := r.FormValue("new_password")
+	confirmPassword := r.FormValue("confirm_password")
+
+	if newPassword != confirmPassword {
+		http.Redirect(w, r, "/reset-password#mismatch", http.StatusFound)
+		return
+	}
+
+	if err := helpers.ValidatePasswordStrength(newPassword); err != nil {
+		http.Redirect(w, r, "/reset-password#weak", http.StatusFound)
+		return
+	}
+
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var storedPassword string
+	err = db.QueryRow("SELECT password FROM users WHERE id = $1", userID).Scan(&storedPassword)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if helpers.IsLegacyPassword(storedPassword) {
+		if currentPassword != storedPassword {
+			http.Redirect(w, r, "/reset-password#invalid", http.StatusFound)
+			return
+		}
+	} else {
+		if !helpers.CheckPassword(currentPassword, storedPassword) {
+			http.Redirect(w, r, "/reset-password#invalid", http.StatusFound)
+			return
+		}
+	}
+
+	hashedPassword, err := helpers.HashPassword(newPassword)
+	if err != nil {
+		log.Printf("Failed to hash password: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = db.Exec("UPDATE users SET password = $1, needs_password_reset = FALSE WHERE id = $2", hashedPassword, userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/reset-password#success", http.StatusFound)
 }
