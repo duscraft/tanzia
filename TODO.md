@@ -22,18 +22,18 @@
 ## High Priority - Security
 
 ### Password Hashing Implementation
-- [ ] Add bcrypt dependency: `go get golang.org/x/crypto/bcrypt`
-- [ ] Create password hashing utility in `lib/helpers/password.go`
-- [ ] Update SignupHandler to hash passwords before storing
-- [ ] Update LoginHandler to compare hashed passwords with bcrypt.CompareHashAndPassword
-- [ ] Create database migration script for existing users (require password reset on first login)
-- [ ] Add password strength validation
+- [x] Add bcrypt dependency: `go get golang.org/x/crypto/bcrypt`
+- [x] Create password hashing utility in `lib/helpers/password.go`
+- [x] Update SignupHandler to hash passwords before storing
+- [x] Update LoginHandler to compare hashed passwords with bcrypt.CompareHashAndPassword
+- [x] Create database migration script for existing users (require password reset on first login)
+- [x] Add password strength validation
 
 ### Session Security
 - [ ] Add CSRF protection for form submissions
-- [ ] Implement secure cookie settings (Secure, SameSite)
-- [ ] Add rate limiting for login attempts
-- [ ] Implement account lockout after failed attempts
+- [x] Implement secure cookie settings (Secure, SameSite)
+- [x] Add rate limiting for login attempts
+- [x] Implement account lockout after failed attempts
 
 ---
 
@@ -76,8 +76,8 @@
 
 ### Phase 6: Premium Features Enforcement
 - [x] Update IsUserPremium to check stripe_customer_id
-- [ ] Add premium badge to dashboard UI
-- [ ] Show upgrade prompts for free users at limits
+- [x] Add premium badge to dashboard UI
+- [x] Show upgrade prompts for free users at limits
 - [x] Implement feature gates for premium-only features (PDF export, limits)
 
 ---
