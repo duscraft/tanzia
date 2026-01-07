@@ -24,6 +24,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
+	rateLimiter := helpers.GetRateLimiter()
+	if rateLimiter.IsLocked(email) {
+		remaining := rateLimiter.GetLockoutRemaining(email)
+		minutes := int(remaining.Minutes()) + 1
+		http.Redirect(w, r, fmt.Sprintf("/login#locked-%d", minutes), http.StatusFound)
+		return
+	}
+
 	db, err := helpers.GetConnectionManager().GetConnection("postgres")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -41,7 +49,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	defer func() { _ = result.Close() }()
 
 	if !result.Next() {
-		http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
+		rateLimiter.RecordFailedAttempt(email)
+		remaining := rateLimiter.GetRemainingAttempts(email)
+		http.Redirect(w, r, fmt.Sprintf("/login#unauthorized-%d", remaining), http.StatusFound)
 		return
 	}
 
@@ -52,7 +62,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if helpers.IsLegacyPassword(storedPassword) {
 		if password != storedPassword {
-			http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
+			locked := rateLimiter.RecordFailedAttempt(email)
+			if locked {
+				http.Redirect(w, r, "/login#locked-15", http.StatusFound)
+				return
+			}
+			remaining := rateLimiter.GetRemainingAttempts(email)
+			http.Redirect(w, r, fmt.Sprintf("/login#unauthorized-%d", remaining), http.StatusFound)
 			return
 		}
 		hashedPassword, err := helpers.HashPassword(password)
@@ -67,10 +83,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		if !helpers.CheckPassword(password, storedPassword) {
-			http.Redirect(w, r, "/login#unauthorized", http.StatusFound)
+			locked := rateLimiter.RecordFailedAttempt(email)
+			if locked {
+				http.Redirect(w, r, "/login#locked-15", http.StatusFound)
+				return
+			}
+			remaining := rateLimiter.GetRemainingAttempts(email)
+			http.Redirect(w, r, fmt.Sprintf("/login#unauthorized-%d", remaining), http.StatusFound)
 			return
 		}
 	}
+
+	rateLimiter.ResetAttempts(email)
 
 	if needsPasswordReset {
 		http.Redirect(w, r, "/reset-password#required", http.StatusFound)
