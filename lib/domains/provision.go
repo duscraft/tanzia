@@ -34,7 +34,7 @@ func AddProvisionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !canUserCreateProvision {
-		http.Error(w, "Free tier does not allow adding more provisions", http.StatusForbidden)
+		http.Redirect(w, r, "/dashboard#limit-provisions", http.StatusFound)
 		return
 	}
 

@@ -53,7 +53,7 @@ func AddPersonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !canUserCreatePerson {
-		http.Error(w, "Free tier does not allow adding more persons", http.StatusForbidden)
+		http.Redirect(w, r, "/dashboard#limit-persons", http.StatusFound)
 		return
 	}
 

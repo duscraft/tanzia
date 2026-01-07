@@ -34,7 +34,7 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !canUserCreateBill {
-		http.Error(w, "Free tier does not allow adding more bills", http.StatusForbidden)
+		http.Redirect(w, r, "/dashboard#limit-bills", http.StatusFound)
 		return
 	}
 
