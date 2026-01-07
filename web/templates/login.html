@@ -6,11 +6,15 @@
       <p class="text-textMuted">Connectez-vous à votre espace Tanzia</p>
     </div>
     
-    <div id="login-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm font-medium mb-6 text-center animate-pulse">
-      E-mail ou mot de passe incorrect.
+    <div id="login-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm font-medium mb-6 text-center">
+      <span id="error-message">E-mail ou mot de passe incorrect.</span>
     </div>
     
-    <form action="/login" method="POST" class="space-y-5">
+    <div id="login-locked" class="hidden bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 p-4 rounded-xl text-sm font-medium mb-6 text-center">
+      <span id="locked-message">Compte temporairement verrouillé.</span>
+    </div>
+    
+    <form action="/login" method="POST" class="space-y-5" id="login-form">
       <div class="text-left">
         <label for="email" class="block mb-2 text-sm font-semibold text-textMain">E-mail</label>
         <input type="email" id="email" name="email" required
@@ -20,15 +24,13 @@
       <div class="text-left">
         <div class="flex justify-between items-center mb-2">
           <label for="password" class="block text-sm font-semibold text-textMain">Mot de passe</label>
-          <!-- TODO: Implement password reset -->
-          <!-- <a href="/forgot-password" class="text-xs font-medium text-primary hover:text-primaryHover transition-colors">Oublié ?</a> -->
         </div>
         <input type="password" id="password" name="password" required
           class="w-full px-4 py-3 rounded-xl bg-surfaceHighlight border border-border text-textMain placeholder-textMuted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           placeholder="••••••••" />
       </div>
       
-      <button type="submit"
+      <button type="submit" id="submit-btn"
         class="w-full bg-primary hover:bg-primaryHover text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:shadow-primary/40 active:scale-[0.98]">
         Se connecter
       </button>
@@ -41,8 +43,40 @@
   </div>
 </main>
 <script>
-  if (window.location.hash === "#unauthorized") {
-    document.getElementById("login-error").classList.remove("hidden");
+(function() {
+  var hash = window.location.hash;
+  var errorDiv = document.getElementById("login-error");
+  var errorMsg = document.getElementById("error-message");
+  var lockedDiv = document.getElementById("login-locked");
+  var lockedMsg = document.getElementById("locked-message");
+  var submitBtn = document.getElementById("submit-btn");
+  var form = document.getElementById("login-form");
+  
+  if (hash.startsWith("#unauthorized")) {
+    errorDiv.classList.remove("hidden");
+    var match = hash.match(/#unauthorized-(\d+)/);
+    if (match) {
+      var remaining = parseInt(match[1]);
+      if (remaining <= 2) {
+        errorMsg.textContent = "E-mail ou mot de passe incorrect. " + remaining + " tentative(s) restante(s) avant verrouillage.";
+      } else {
+        errorMsg.textContent = "E-mail ou mot de passe incorrect.";
+      }
+    }
   }
+  
+  if (hash.startsWith("#locked")) {
+    lockedDiv.classList.remove("hidden");
+    errorDiv.classList.add("hidden");
+    var match = hash.match(/#locked-(\d+)/);
+    if (match) {
+      var minutes = parseInt(match[1]);
+      lockedMsg.textContent = "Trop de tentatives échouées. Réessayez dans " + minutes + " minute(s).";
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+      submitBtn.classList.remove("hover:bg-primaryHover", "hover:scale-[1.02]");
+    }
+  }
+})();
 </script>
 {{end}}
