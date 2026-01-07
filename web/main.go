@@ -72,7 +72,14 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Template error", http.StatusInternalServerError)
 		return
 	}
-	if err := t.ExecuteTemplate(w, "base", nil); err != nil {
+	
+	data := struct {
+		Redirect string
+	}{
+		Redirect: r.URL.Query().Get("redirect"),
+	}
+	
+	if err := t.ExecuteTemplate(w, "base", data); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -151,6 +158,7 @@ func main() {
 	http.HandleFunc("GET /legals", legalsHandler)
 	http.HandleFunc("GET /export/pdf", domains.ExportPDFHandler)
 	http.HandleFunc("POST /subscribe", domains.CreateCheckoutSessionHandler)
+	http.HandleFunc("GET /subscribe", domains.CreateCheckoutSessionHandler)
 	http.HandleFunc("POST /customer-portal", domains.CustomerPortalHandler)
 	http.HandleFunc("POST /stripe/webhook", domains.StripeWebhookHandler)
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static/"))))
