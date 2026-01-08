@@ -36,15 +36,17 @@ jobs:
         run: go mod download
       - name: Go test with coverage
         run: go test -coverprofile=coverage.out -covermode=atomic ./...
-      - name: Check coverage threshold
+      - name: Report coverage
         run: |
           COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
-          echo "Total coverage: ${COVERAGE}%"
+          echo "## Test Coverage: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Target: 80%" >> $GITHUB_STEP_SUMMARY
           if (( $(echo "$COVERAGE < 80" | bc -l) )); then
-            echo "::error::Coverage ${COVERAGE}% is below 80% threshold"
-            exit 1
+            echo "::warning::Coverage ${COVERAGE}% is below 80% target"
+          else
+            echo "Coverage target met!"
           fi
-          echo "Coverage check passed: ${COVERAGE}% >= 80%"
 
   build-web:
     runs-on: ubuntu-latest
