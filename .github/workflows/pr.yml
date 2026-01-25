@@ -34,8 +34,19 @@ jobs:
           cache: true
       - name: Install deps
         run: go mod download
-      - name: Go test
-        run: go test ./...
+      - name: Go test with coverage
+        run: go test -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Report coverage
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          echo "## Test Coverage: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Target: 80%" >> $GITHUB_STEP_SUMMARY
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "::warning::Coverage ${COVERAGE}% is below 80% target"
+          else
+            echo "Coverage target met!"
+          fi
 
   build-web:
     runs-on: ubuntu-latest
