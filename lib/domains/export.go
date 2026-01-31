@@ -8,6 +8,7 @@ import (
 
 	"github.com/duscraft/tanzia/lib/helpers"
 	"github.com/go-pdf/fpdf"
+	"github.com/xuri/excelize/v2"
 )
 
 func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
@@ -162,6 +163,181 @@ func ExportPDFHandler(w http.ResponseWriter, r *http.Request) {
 	if err := pdf.Output(w); err != nil {
 		log.Printf("Error generating PDF: %v", err)
 		http.Error(w, "Failed to generate PDF", http.StatusInternalServerError)
+		return
+	}
+}
+
+func ExportExcelHandler(w http.ResponseWriter, r *http.Request) {
+	userID, ok := GetAuthenticatedUserID(w, r)
+	if !ok {
+		http.Redirect(w, r, "/logout", http.StatusFound)
+		return
+	}
+
+	db, err := helpers.GetConnectionManager().GetConnection("postgres")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	isPremium, err := helpers.IsUserPremium(db, userID)
+	if err != nil {
+		log.Printf("Error checking premium status: %v", err)
+		http.Error(w, "Could not verify subscription status", http.StatusInternalServerError)
+		return
+	}
+
+	if !isPremium {
+		http.Error(w, "Premium subscription required for Excel export", http.StatusForbidden)
+		return
+	}
+
+	data, err := getDashboardData(userID)
+	if err != nil {
+		log.Printf("Error getting dashboard data: %v", err)
+		http.Error(w, "Failed to load data", http.StatusInternalServerError)
+		return
+	}
+
+	f := excelize.NewFile()
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Printf("Error closing Excel file: %v", err)
+		}
+	}()
+
+	// Header style
+	headerStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &excelize.Font{Bold: true, Color: "FFFFFF"},
+		Fill:      excelize.Fill{Type: "pattern", Color: []string{"4F46E5"}, Pattern: 1},
+		Alignment: &excelize.Alignment{Horizontal: "center", Vertical: "center"},
+		Border: []excelize.Border{
+			{Type: "left", Color: "000000", Style: 1},
+			{Type: "top", Color: "000000", Style: 1},
+			{Type: "bottom", Color: "000000", Style: 1},
+			{Type: "right", Color: "000000", Style: 1},
+		},
+	})
+
+	// Data style
+	dataStyle, _ := f.NewStyle(&excelize.Style{
+		Border: []excelize.Border{
+			{Type: "left", Color: "000000", Style: 1},
+			{Type: "top", Color: "000000", Style: 1},
+			{Type: "bottom", Color: "000000", Style: 1},
+			{Type: "right", Color: "000000", Style: 1},
+		},
+	})
+
+	// Currency style
+	currencyStyle, _ := f.NewStyle(&excelize.Style{
+		NumFmt: 44, // EUR currency format
+		Border: []excelize.Border{
+			{Type: "left", Color: "000000", Style: 1},
+			{Type: "top", Color: "000000", Style: 1},
+			{Type: "bottom", Color: "000000", Style: 1},
+			{Type: "right", Color: "000000", Style: 1},
+		},
+	})
+
+	// === Copropriétaires Sheet ===
+	sheetName := "Copropriétaires"
+	f.SetSheetName("Sheet1", sheetName)
+
+	// Headers
+	f.SetCellValue(sheetName, "A1", "Nom")
+	f.SetCellValue(sheetName, "B1", "Tantièmes")
+	f.SetCellValue(sheetName, "C1", "Part (%)")
+	f.SetCellValue(sheetName, "D1", "Solde (EUR)")
+	f.SetCellStyle(sheetName, "A1", "D1", headerStyle)
+
+	for i, person := range data.Persons {
+		row := i + 2
+		percentage := 0.0
+		if data.TotalTantiemes > 0 {
+			percentage = float64(person.Tantieme) / float64(data.TotalTantiemes) * 100
+		}
+		balance := person.CalculateLeft(data.TotalTantiemes, data.Bills, data.Provisions)
+
+		f.SetCellValue(sheetName, fmt.Sprintf("A%d", row), person.Name)
+		f.SetCellValue(sheetName, fmt.Sprintf("B%d", row), person.Tantieme)
+		f.SetCellValue(sheetName, fmt.Sprintf("C%d", row), fmt.Sprintf("%.2f%%", percentage))
+		f.SetCellValue(sheetName, fmt.Sprintf("D%d", row), balance)
+		f.SetCellStyle(sheetName, fmt.Sprintf("A%d", row), fmt.Sprintf("C%d", row), dataStyle)
+		f.SetCellStyle(sheetName, fmt.Sprintf("D%d", row), fmt.Sprintf("D%d", row), currencyStyle)
+	}
+
+	f.SetColWidth(sheetName, "A", "A", 25)
+	f.SetColWidth(sheetName, "B", "B", 12)
+	f.SetColWidth(sheetName, "C", "C", 12)
+	f.SetColWidth(sheetName, "D", "D", 15)
+
+	// === Provisions Sheet ===
+	if len(data.Provisions) > 0 {
+		sheetName = "Provisions"
+		f.NewSheet(sheetName)
+
+		f.SetCellValue(sheetName, "A1", "Libellé")
+		f.SetCellValue(sheetName, "B1", "Montant (EUR)")
+		f.SetCellStyle(sheetName, "A1", "B1", headerStyle)
+
+		for i, provision := range data.Provisions {
+			row := i + 2
+			f.SetCellValue(sheetName, fmt.Sprintf("A%d", row), provision.Label)
+			f.SetCellValue(sheetName, fmt.Sprintf("B%d", row), provision.Amount)
+			f.SetCellStyle(sheetName, fmt.Sprintf("A%d", row), fmt.Sprintf("A%d", row), dataStyle)
+			f.SetCellStyle(sheetName, fmt.Sprintf("B%d", row), fmt.Sprintf("B%d", row), currencyStyle)
+		}
+
+		f.SetColWidth(sheetName, "A", "A", 40)
+		f.SetColWidth(sheetName, "B", "B", 15)
+	}
+
+	// === Travaux Sheet ===
+	if len(data.Bills) > 0 {
+		sheetName = "Travaux"
+		f.NewSheet(sheetName)
+
+		f.SetCellValue(sheetName, "A1", "Libellé")
+		f.SetCellValue(sheetName, "B1", "Montant (EUR)")
+		f.SetCellStyle(sheetName, "A1", "B1", headerStyle)
+
+		for i, bill := range data.Bills {
+			row := i + 2
+			f.SetCellValue(sheetName, fmt.Sprintf("A%d", row), bill.Label)
+			f.SetCellValue(sheetName, fmt.Sprintf("B%d", row), bill.Amount)
+			f.SetCellStyle(sheetName, fmt.Sprintf("A%d", row), fmt.Sprintf("A%d", row), dataStyle)
+			f.SetCellStyle(sheetName, fmt.Sprintf("B%d", row), fmt.Sprintf("B%d", row), currencyStyle)
+		}
+
+		f.SetColWidth(sheetName, "A", "A", 40)
+		f.SetColWidth(sheetName, "B", "B", 15)
+	}
+
+	// === Résumé Sheet ===
+	sheetName = "Résumé"
+	f.NewSheet(sheetName)
+
+	f.SetCellValue(sheetName, "A1", "Rapport Tanzia")
+	f.SetCellValue(sheetName, "A2", "Date")
+	f.SetCellValue(sheetName, "B2", time.Now().Format("02/01/2006"))
+	f.SetCellValue(sheetName, "A4", "Total Tantièmes")
+	f.SetCellValue(sheetName, "B4", data.TotalTantiemes)
+	f.SetCellValue(sheetName, "A5", "Nombre de copropriétaires")
+	f.SetCellValue(sheetName, "B5", len(data.Persons))
+	f.SetCellValue(sheetName, "A6", "Solde Global (EUR)")
+	f.SetCellValue(sheetName, "B6", data.Balance)
+	f.SetCellStyle(sheetName, "B6", "B6", currencyStyle)
+
+	f.SetColWidth(sheetName, "A", "A", 25)
+	f.SetColWidth(sheetName, "B", "B", 15)
+
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=tanzia-rapport-%s.xlsx", time.Now().Format("2006-01-02")))
+
+	if err := f.Write(w); err != nil {
+		log.Printf("Error generating Excel: %v", err)
+		http.Error(w, "Failed to generate Excel", http.StatusInternalServerError)
 		return
 	}
 }

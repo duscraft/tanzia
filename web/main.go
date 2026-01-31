@@ -176,6 +176,7 @@ func main() {
 	http.HandleFunc("GET /reset-password", resetPasswordHandler)
 	http.HandleFunc("POST /reset-password", helpers.CSRFProtect(domains.ResetPasswordHandler))
 	http.HandleFunc("GET /export/pdf", domains.ExportPDFHandler)
+	http.HandleFunc("GET /export/excel", domains.ExportExcelHandler)
 	http.HandleFunc("POST /subscribe", helpers.CSRFProtect(domains.CreateCheckoutSessionHandler))
 	http.HandleFunc("GET /subscribe", domains.CreateCheckoutSessionHandler)
 	http.HandleFunc("POST /customer-portal", helpers.CSRFProtect(domains.CustomerPortalHandler))
