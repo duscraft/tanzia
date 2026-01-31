@@ -72,13 +72,13 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Template error", http.StatusInternalServerError)
 		return
 	}
-	
+
 	data := struct {
 		Redirect string
 	}{
 		Redirect: r.URL.Query().Get("redirect"),
 	}
-	
+
 	if err := t.ExecuteTemplate(w, "base", data); err != nil {
 		log.Printf("Error executing template: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -141,10 +141,12 @@ func main() {
 	if len(redisPort) == 0 {
 		redisPort = "6379"
 	}
+	redisPassword := os.Getenv("REDIS_PASSWORD")
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: fmt.Sprintf("%s:%s", redisURL, redisPort),
-			DB:   0,
+			Addr:     fmt.Sprintf("%s:%s", redisURL, redisPort),
+			Password: redisPassword,
+			DB:       0,
 		})),
 	)
 

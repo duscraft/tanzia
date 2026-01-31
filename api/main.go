@@ -21,10 +21,12 @@ func main() {
 	if len(redisPort) == 0 {
 		redisPort = "6379"
 	}
+	redisPassword := os.Getenv("REDIS_PASSWORD")
 	session.InitManager(
 		session.SetStore(redis.NewRedisStore(&redis.Options{
-			Addr: fmt.Sprintf("%s:%s", redisURL, redisPort),
-			DB:   0,
+			Addr:     fmt.Sprintf("%s:%s", redisURL, redisPort),
+			Password: redisPassword,
+			DB:       0,
 		})),
 	)
 
