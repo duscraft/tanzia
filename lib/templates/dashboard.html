@@ -102,6 +102,14 @@
                 PDF
               </a>
             </div>
+            {{else}}
+            <form action="/subscribe" method="POST" class="subscribe-form hidden sm:block">
+              <input type="hidden" name="csrf_token" class="csrf_token" value="" />
+              <button type="submit" class="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:shadow-orange-500/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                Premium
+              </button>
+            </form>
             {{end}}
             <button id="theme-toggle" class="p-2 rounded-full text-textMuted hover:bg-surfaceHighlight hover:text-textMain transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50" aria-label="Toggle theme">
               <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
@@ -122,6 +130,29 @@
     <div class="h-16"></div>
 
     <main class="max-w-7xl w-full mx-auto flex-grow px-4 sm:px-6 lg:px-8 py-12">
+      {{if not .IsPremium}}
+      <div class="mb-8 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-textMain">Passez au Premium</h3>
+              <p class="text-sm text-textMuted mt-1">Copropriétaires illimités, exports Excel/PDF et bien plus pour seulement 9€/mois.</p>
+            </div>
+          </div>
+          <form action="/subscribe" method="POST" class="subscribe-form w-full sm:w-auto">
+            <input type="hidden" name="csrf_token" class="csrf_token" value="" />
+            <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:shadow-orange-500/30">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              Passer au Premium
+            </button>
+          </form>
+        </div>
+      </div>
+      {{end}}
+
       <div class="sm:hidden mb-8">
         <a href="/persons" class="flex w-full justify-center items-center gap-2 bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-xl shadow-lg transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
